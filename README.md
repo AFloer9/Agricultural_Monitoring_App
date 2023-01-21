@@ -1,1 +1,1 @@
-# CS320_Price_Tracking_Suite
+# Agricultural_Monitoring_App
