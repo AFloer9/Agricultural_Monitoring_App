@@ -2,12 +2,7 @@ import subprocess
 import json
 import requests
 import csv
-#with open('weatherData.txt', 'w') as file:
-#    subprocess.run(['scrapy','crawl', 'weather','-s','LOG_ENABLED=False'], stdout=file)
-#data  = subprocess.run('curl -X GET "https://api.weather.gov/gridpoints/PQR/122,44/forecast?units=us" -H  "accept: application/geo+json"', text=True, shell=True)#capture_output=True, shell=True)
-
-data  = requests.get("https://api.weather.gov/gridpoints/PQR/122,44/forecast?units=us")
-t = json.loads(data.text)
+import os
 
 def dayData(day):
     data = []
@@ -26,6 +21,7 @@ def dayData(day):
     
     return data
 
+
 def weekData(week):
     weekData = []
     
@@ -34,10 +30,6 @@ def weekData(week):
 
     return weekData
 
-data = t["properties"]["periods"]
-
-#[print('\t*' ,i, "\n") for i in weekData(data)] # print week data
-data = weekData(data)
 
 def dataToFile(filename, week):
 
@@ -45,13 +37,39 @@ def dataToFile(filename, week):
         csv_write = csv.writer(file, delimiter='\t')
 
         for i in week:
-            #length = len(i)
             csv_write.writerow(i)
-    # api
 
+def weatherToCSV(filename):
+    with open(filename +'.txt', 'r') as file:
+        with open(filename + '.csv', 'w') as f:
+            csv_write = csv.writer(f, delimiter='\t')
+            for line in file:
+                csv_write.writerow(line[1:-2].replace("'", '').split(','))
+
+
+def manager():
+    # run each program
+    
+    # api
+    req  = requests.get("https://api.weather.gov/gridpoints/PQR/122,44/forecast?units=us")
+    dic = json.loads(req.text)
+    
+    data = dic["properties"]["periods"] # get weather data
+    
+    #[print('\t*' ,i, "\n") for i in weekData(data)] # print week data
+    data = weekData(data)
+    dataToFile("api", data)
 
     # scrapy
+    filename = 'weatherData'
+    with open(filename + '.txt', 'w') as file:
+        subprocess.run(['scrapy','crawl', 'weather','-s','LOG_ENABLED=False'], stdout=file)
+        weatherToCSV(filename)
 
-    # 
+        os.remove(filename + '.txt')
+    
+    # arduino
 
-dataToFile("api", data)
+
+manager()
+
