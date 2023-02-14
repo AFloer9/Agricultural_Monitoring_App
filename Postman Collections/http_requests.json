@@ -97,7 +97,8 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": "http://127.0.0.1:8000/"
 			},
 			"response": []
 		}
