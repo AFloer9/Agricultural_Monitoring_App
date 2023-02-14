@@ -90,7 +90,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "main page",
 			"id": "274d1535-7eb9-4cb5-b243-57cf983998f6",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
