@@ -7,7 +7,7 @@
 	"item": [
 		{
 			"name": "http://127.0.0.1:8000/",
-			"_postman_id": "5a1d4b00-5729-45e0-b4c3-8b796a8c70ab",
+			"id": "5a1d4b00-5729-45e0-b4c3-8b796a8c70ab",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -29,7 +29,7 @@
 		},
 		{
 			"name": "http://127.0.0.1:8000/seedvault",
-			"_postman_id": "2b7db859-cdc7-45e5-a49e-b19df99f3282",
+			"id": "2b7db859-cdc7-45e5-a49e-b19df99f3282",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -42,7 +42,7 @@
 		},
 		{
 			"name": "users",
-			"_postman_id": "89e20b13-73ec-43b8-aad9-6611d7e3bbc4",
+			"id": "89e20b13-73ec-43b8-aad9-6611d7e3bbc4",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -50,6 +50,18 @@
 				"method": "GET",
 				"header": [],
 				"url": "http://127.0.0.1:8000/users"
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"id": "068a60a2-9569-44d9-9371-55520dabb911",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}
