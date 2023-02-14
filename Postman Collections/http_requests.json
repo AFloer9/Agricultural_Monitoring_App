@@ -28,7 +28,7 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:8000/seedvault",
+			"name": "Seedvault",
 			"id": "2b7db859-cdc7-45e5-a49e-b19df99f3282",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
