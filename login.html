@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head><!-- meta data -->
+        <title>Garden Minder</title>
+        <!-- refresh web page every 3 seconds -->
+        <meta http-equiv="refresh" content="3"> 
+    </head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+
+    <body align="center">
+
+        <!-- Navigation Bar -->
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="yourgarden.html">Your Garden</a></li>
+            <li><a href="plant_care.html">Plant Care</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+
+
+        <h1>Login</h1>
+
+        <forms action="action_page.php" method="POST">
+            <!-- another attribute is 'method' that sends for data 'google' it's values. actoin and method doesn't do anything here without a backend server-->
+            <label for="first_name">First Name:</label><!-- places the cursor inside of the textbox with id "first_name" -->
+            <input type="text" id="first_name" name="first_name" placeholder="John" required><!-- selfclosing tag, common practice is to have id equal to name.-->
+        </forms>
+
+        <br><br>
+
+        <forms action=""><!-- action attribute later -->
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" placeholder="Doe" required><!-- selfclosing tag, common practice is to have id equal to name.-->
+        </forms>
+
+        <br><br>
+
+        <label for="pass">Password:</label>
+        <input type="password" id="pass" name="pass" maxlength="2">
+        <br>
+        max 2 characters
+
+    </body>
+  
+</html>

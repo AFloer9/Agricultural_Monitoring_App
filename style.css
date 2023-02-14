@@ -1,0 +1,52 @@
+html{
+	background-color: #38c942;
+	/*	dynamic background image, looses quality with high resolution*/
+/*	background-image: url("somepictur here.jpg");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	background-attachment: fixed;*/
+
+}
+body{
+	background-color: white;
+	margin: 10% 20% 10% 20%;
+}
+h1{
+
+
+}
+div{
+/*	border:1px solid black;*/
+}
+p{
+	font-family: "Ink Free";
+	font-weight: bold;
+	margin: 1%;
+}
+
+/*navigation bar*/
+ul{
+	list-style-type:none;
+	padding: 0px;
+	margin: 0px;
+	overflow: hidden;
+	background-color:#444444;
+}
+
+/*hyper links in navigation bar*/
+li a{
+	float:left;
+	dislpay: block;
+	color: white;
+	padding: 10px 15px;
+	text-align: center;
+	text-decorattion: none;
+	border: 1px solid black;
+	min-width: 60px;
+}
+/*pseudo class for hyperlinks in navigation bar*/
+li a:hover{
+/*this color sux by the way*/
+	color: #380540;
+}
