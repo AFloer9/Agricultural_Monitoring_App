@@ -103,7 +103,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "Supply inventory",
 			"id": "5846021e-bc68-4de4-82db-aa6fec01aef0",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
