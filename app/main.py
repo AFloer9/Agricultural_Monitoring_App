@@ -62,15 +62,16 @@ class Supply(BaseModel):  # extends class Basemodel--allows auto-validation of u
     amt: int = "1"  # default = 1 unit
     unit: str = "lbs."  # default = pounds; could be ounces, etc.
 
-# while True:  # until connected to DB   #
-# connect to local database:
-# try:
-# db = sqlite3.connect(database='database.db')
-# cursor = db.cursor()  # cursor to execute SQL queries
-# print("connection successful")
-# break
-# except Exception as error:
-# print("Error: ", error)
+
+while True:  # until connected to DB   #
+    # connect to local database:
+    try:
+        db = sqlite3.connect(database='database.db', check_same_thread=False)
+        cursor = db.cursor()  # cursor to execute SQL queries
+        print("connection successful")
+        break
+    except Exception as error:
+        print("Error: ", error)
 
 
 # hardcoded for http post requests/database "seeding"  [list{dict}] for testing--normally this would come from database:  #DEBUG
@@ -88,7 +89,7 @@ my_supplies = [
 wishlist = [{"id": 40, "plant_type": "", "sci_name": "Acer"}]
 
 # print class which object belongs to (for testing type/curiosity):    #DEBUG
-print(type(my_seeds))
+# print(type(my_seeds))
 
 
 # API drills down thru request functions until it finds a request match:
@@ -102,8 +103,10 @@ def show_root():  # define function   ?async
 
 
 @app.get("/sqlalchemy")
-def test_seeds(db: Session = Depends(get_db)):
-    return {"status": "success"}
+def test_seeds(db: Session = Depends(get_db)):  # dependency
+    seeds = db.query(sqlalchmodels.Seed).all()  # using SQLAlchemy query
+    print(seeds)  # print to terminal
+    return {"data": seeds}
 
 
 @app.get("/login")
@@ -113,9 +116,10 @@ def user_login():
 
 @app.get("/seedvault")  # get inventory of seeds collected (all listings)
 def show_seedvault():
-    # seedvault = cursor.execute("""SELECT * FROM seedvault""")
-    print(my_seeds)
-    return {"data": my_seeds}
+    seeds = cursor.execute("""SELECT * FROM seedvault""")  # using SQL query
+    # cursor.execute("""SELECT * FROM seedvault""")  # using SQL query
+    # print(seeds)
+    return {"data": seeds}
 
 
 @app.get("/my_plants")  # get inventory of plants owned (all listings)
