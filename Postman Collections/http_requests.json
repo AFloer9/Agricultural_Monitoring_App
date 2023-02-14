@@ -54,7 +54,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "My Plants",
 			"id": "068a60a2-9569-44d9-9371-55520dabb911",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
