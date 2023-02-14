@@ -116,18 +116,6 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
-			"id": "832f8f76-a310-4b79-965a-96c3fd1a7a78",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
 			"name": "SQLAlchemy",
 			"id": "68099f49-452a-4143-b183-5ddf42b3e50a",
 			"protocolProfileBehavior": {
