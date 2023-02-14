@@ -6,15 +6,15 @@
 	},
 	"item": [
 		{
-			"name": "Seedvault",
-			"id": "2b7db859-cdc7-45e5-a49e-b19df99f3282",
+			"name": "main page",
+			"id": "274d1535-7eb9-4cb5-b243-57cf983998f6",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://127.0.0.1:8000/my_plants"
+				"url": "http://127.0.0.1:8000/"
 			},
 			"response": []
 		},
@@ -28,6 +28,19 @@
 				"method": "GET",
 				"header": [],
 				"url": "http://127.0.0.1:8000/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Seedvault",
+			"id": "2b7db859-cdc7-45e5-a49e-b19df99f3282",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:8000/my_plants"
 			},
 			"response": []
 		},
@@ -90,15 +103,14 @@
 			"response": []
 		},
 		{
-			"name": "main page",
-			"id": "274d1535-7eb9-4cb5-b243-57cf983998f6",
+			"name": "New Request",
+			"id": "5846021e-bc68-4de4-82db-aa6fec01aef0",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
-				"url": "http://127.0.0.1:8000/"
+				"header": []
 			},
 			"response": []
 		}
