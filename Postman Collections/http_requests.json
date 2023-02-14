@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "525783ec-c0ed-46f6-812b-16fc389c3947",
+		"name": "AgMoProject http",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "main page",
+			"id": "274d1535-7eb9-4cb5-b243-57cf983998f6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:8000/"
+			},
+			"response": []
+		},
+		{
+			"name": "users",
+			"id": "89e20b13-73ec-43b8-aad9-6611d7e3bbc4",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:8000/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Seedvault",
+			"id": "2b7db859-cdc7-45e5-a49e-b19df99f3282",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:8000/my_plants"
+			},
+			"response": []
+		},
+		{
+			"name": "My Plants",
+			"id": "068a60a2-9569-44d9-9371-55520dabb911",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Wishlist",
+			"id": "cb6026fb-cd8f-48b7-a89a-18a5a3a4ac19",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "new user",
+			"id": "eb3c252f-58ad-4023-97d9-3b71d433e0ad",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "new seed",
+			"id": "5a1d4b00-5729-45e0-b4c3-8b796a8c70ab",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"id\": 10,\r\n   \"seed_type\": \"marigold\",\r\n   \"coll_loc\": \"back yard\",\r\n    \"coll_date\": \"2/8/2023\",\r\n    \"num_seeds\": \"2\"\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:8000/seedvault"
+			},
+			"response": []
+		},
+		{
+			"name": "Supply inventory",
+			"id": "5846021e-bc68-4de4-82db-aa6fec01aef0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
