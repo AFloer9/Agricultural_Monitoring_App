@@ -75,8 +75,9 @@
 				"disableBodyPruning": true
 			},
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"url": "http://127.0.0.1:8000/users"
 			},
 			"response": []
 		},
@@ -105,6 +106,18 @@
 		{
 			"name": "Supply inventory",
 			"id": "5846021e-bc68-4de4-82db-aa6fec01aef0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "SQLAlchemy",
+			"id": "68099f49-452a-4143-b183-5ddf42b3e50a",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
