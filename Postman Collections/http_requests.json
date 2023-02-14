@@ -128,7 +128,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "SQLAlchemy",
 			"id": "68099f49-452a-4143-b183-5ddf42b3e50a",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
