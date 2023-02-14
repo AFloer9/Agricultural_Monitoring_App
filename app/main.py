@@ -14,7 +14,7 @@ sqlalchmodels.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()  # create instance of FastAPI named 'app'
 
-# Dependency
+# Dependency--don't start session unless connected
 
 
 def get_db():
@@ -102,7 +102,7 @@ def show_root():  # define function   ?async
     return {"Welcome to ": "the Agricultural Monitoring Project"}
 
 
-@app.get("/sqlalchemy")
+@app.get("/sqlalchemy")  # *******this one works!*****
 def test_seeds(db: Session = Depends(get_db)):  # dependency
     seeds = db.query(sqlalchmodels.Seed).all()  # using SQLAlchemy query
     print(seeds)  # print to terminal
@@ -123,8 +123,9 @@ def show_seedvault():
 
 
 @app.get("/my_plants")  # get inventory of plants owned (all listings)
-def show_my_plants():
-    return {"data": my_plants}
+def show_my_plants(db: Session = Depends(get_db)):
+    plants = db.query(sqlalchmodels.Plant).all()  # using SQLAlchemy query
+    return {"data": plants}
 
 
 @app.get("/wishlist")  # get entire plant wishlist (all listings)

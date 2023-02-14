@@ -26,7 +26,7 @@ class Seed(Base):  # extends class Basemodel--allows auto-validation of user inp
     coll_loc = Column(String)
     # str = date.today()  # default = current date
     coll_date = Column(String, nullable=False, default=date.today)
-    num_seeds = Column(Integer, default="1")  # int = "1"  # default = 1 seed
+    num_coll = Column(Integer, default="1")  # int = "1"  # default = 1 seed
 
 
 class Plant(Base):  # extends class Basemodel--allows auto-validation of user input adherence to format--Seed inherits from Pydantic model
