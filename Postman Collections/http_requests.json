@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "http://127.0.0.1:8000/",
+			"name": "new seed",
 			"id": "5a1d4b00-5729-45e0-b4c3-8b796a8c70ab",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -16,7 +16,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n   \"seed_type\": \"marigold\",\r\n   \"location\": \"back yard\",\r\n    \"date\": \"2/8/2023\",\r\n    \"number_of_seeds\": \"2\"\r\n    \r\n\r\n}",
+					"raw": "{\r\n   \"id\": 10,\r\n   \"seed_type\": \"marigold\",\r\n   \"coll_loc\": \"back yard\",\r\n    \"coll_date\": \"2/8/2023\",\r\n    \"num_seeds\": \"2\"\r\n    \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
