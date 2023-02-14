@@ -1,0 +1,57 @@
+{
+	"info": {
+		"_postman_id": "525783ec-c0ed-46f6-812b-16fc389c3947",
+		"name": "AgMoProject http",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:8000/",
+			"_postman_id": "5a1d4b00-5729-45e0-b4c3-8b796a8c70ab",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"seed_type\": \"marigold\",\r\n   \"location\": \"back yard\",\r\n    \"date\": \"2/8/2023\",\r\n    \"number_of_seeds\": \"2\"\r\n    \r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:8000/seedvault"
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/seedvault",
+			"_postman_id": "2b7db859-cdc7-45e5-a49e-b19df99f3282",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:8000/my_plants"
+			},
+			"response": []
+		},
+		{
+			"name": "users",
+			"_postman_id": "89e20b13-73ec-43b8-aad9-6611d7e3bbc4",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:8000/users"
+			},
+			"response": []
+		}
+	]
+}
