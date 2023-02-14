@@ -64,8 +64,10 @@ def manager():
     filename = 'weatherData'
     with open(filename + '.txt', 'w') as file:
         subprocess.run(['scrapy','crawl', 'weather','-s','LOG_ENABLED=False'], stdout=file)
+        # scrapy runspider weatherCrawler.py
+        # run web crawler (need to be in right directory)
         weatherToCSV(filename)
-
+        
         os.remove(filename + '.txt')
     
     # arduino
