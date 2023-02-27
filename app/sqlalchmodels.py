@@ -3,7 +3,8 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from datetime import date  # for default today's date insertion to date fields
 
-from .dbsetup import Base
+from dbsetup import Base
+#from .dbsetup import Base
 
 
 class User(Base):  # extends class Base--allows auto-validation of user input adherence to format--Seed inherits from Pydantic model

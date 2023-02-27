@@ -7,8 +7,9 @@ from datetime import date  # for default today's date insertion to date fields
 from random import randrange
 import sqlite3  # SQLite library
 from sqlalchemy.orm import Session
-from . import sqlalchmodels
-from .dbsetup import engine, SessionLocal
+import sqlalchmodels
+#from .dbsetup import engine, SessionLocal
+from dbsetup import engine, SessionLocal
 
 sqlalchmodels.Base.metadata.create_all(bind=engine)
 
