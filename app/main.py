@@ -1,142 +1,57 @@
 # main.py
 
-from fastapi import Body, FastAPI, Depends  # import library/framework
+from fastapi import Body, FastAPI, Depends, HTTPException, status  # import library/framework
 from pydantic import BaseModel  # classes inherit from base model
 from datetime import date  # for default today's date insertion to date fields
-# for random id num assignation (pre-database) #DEBUG
-from random import randrange
 import sqlite3  # SQLite library
 from sqlalchemy.orm import Session
-import sqlalchmodels
+import pydanticmodels
+import sqlalchmodels #for use with SQLAlchemy
+#from sqlalchmodels import Seed
+#from . import sqlalchmodels
+#   from sqlalchmodels import User, Seed, Plant, Supply, Base
 #from .dbsetup import engine, SessionLocal
-from dbsetup import engine, SessionLocal
+from dbsetup import engine, get_db #for use with SQLAlchemy
+from passlib.context import CryptContext
 
-sqlalchmodels.Base.metadata.create_all(bind=engine)
+pwd_context = CryptContext(schemes=["bcrypt"]) #hash algorithm type
+sqlalchmodels.Base.metadata.create_all(bind=engine) #creates all tables according to SQLAlchemy models
 
 app = FastAPI()  # create instance of FastAPI named 'app'
 
-# Dependency--don't start session unless connected
+#while True:  # until connected to DB   #for raw SQL
+   
+    #try:
+        #db = sqlite3.connect(database='database.db', check_same_thread=False)  # connect to local database
+        #cursor = db.cursor()  # cursor to execute SQL queries
+        #print("connection to DB successful")
+        #break
+    #except Exception as error:
+        #print("Error: ", error)
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+#path operations:
+# API server drills down thru request functions until it finds an HTTP request match:
 
+# @decorator(wrapper--extends behavior of following function (i.e. show_root))    
+# path operation/route URL (i.e. "/")   http method(i.e. GET) to endpoint
 
-class User(BaseModel):  # extends class Base--allows auto-validation of user input adherence to format--Seed inherits from Pydantic model
-    id: int  # unique ID number for database
-    name: str
-    user_name: str
-    join_date: str = date.today()  # default = current date
-    pw: str
-    email: str
-    zipcode: int
-
-
-class Seed(BaseModel):  # extends class Basemodel--allows auto-validation of user input adherence to format--Seed inherits from Pydantic model
-    id: int
-    seed_type: str
-    coll_loc: str
-    coll_date: str = date.today()  # default = current date
-    num_seeds: int = "1"  # default = 1 seed
-
-
-class Plant(BaseModel):  # extends class Basemodel--allows auto-validation of user input adherence to format--Seed inherits from Pydantic model
-    id: int
-    plant_type: str
-    sci_name: str
-    date_acq: str = date.today()  # default = current date
-    num_plants: int = "1"  # default = 1 plant
-    watering_week: int
-    sunlight_hrs_day: int
-
-
-class Supply(BaseModel):  # extends class Basemodel--allows auto-validation of user input adherence to format--Seed inherits from Pydantic model
-    id: int
-    supply_type: str
-    brand_name: str
-    purch_acq: str = date.today()  # default = current date
-    num_supply: int = "1"  # default = 1 item/container
-    amt: int = "1"  # default = 1 unit
-    unit: str = "lbs."  # default = pounds; could be ounces, etc.
-
-
-while True:  # until connected to DB   #
-    # connect to local database:
-    try:
-        db = sqlite3.connect(database='database.db', check_same_thread=False)
-        cursor = db.cursor()  # cursor to execute SQL queries
-        print("connection successful")
-        break
-    except Exception as error:
-        print("Error: ", error)
-
-
-# hardcoded for http post requests/database "seeding"  [list{dict}] for testing--normally this would come from database:  #DEBUG
-user = [{"uid": 1, "name": "Jon Snow", "pw": "winteriscoming",
-         "email": "jonsnow@gmail.com", "zipcode": 51031}]
-
-my_seeds = [{"id": 10, "seed_type": "daisy", "coll_loc": "backyard"}, {
-    "id": 2, "seed_type": "zinnia", "coll_loc": "field"}]
-
-my_plants = [{"id": 20, "plant_type": "maple", "sci_name": "Acer"}]
-
-my_supplies = [
-    {"id": 30, "supply_type": "fertilizer", "brand_name": "MiracleGro"}]
-
-wishlist = [{"id": 40, "plant_type": "", "sci_name": "Acer"}]
-
-# print class which object belongs to (for testing type/curiosity):    #DEBUG
-# print(type(my_seeds))
-
-
-# API drills down thru request functions until it finds a request match:
-
-# decorator(wrapper--extends behavior of following function (i.e. show_root))    path operation/route URL (i.e. "/")   http method(i.e. GET) to endpoint
-
-@app.get("/")
+#methods formatted as below are for testing HTTP queries BEFORE DB is contructed--change format, or delete once DB is in use
+@app.get("/")   
 def show_root():  # define function   ?async
     # displayed to user (gets converted to JSON) (key:value pair)
     return {"Welcome to ": "the Agricultural Monitoring Project"}
-
-
-@app.get("/sqlalchemy")  # *******this one works!*****
-def test_seeds(db: Session = Depends(get_db)):  # dependency
-    seeds = db.query(sqlalchmodels.Seed).all()  # using SQLAlchemy query
-    print(seeds)  # print to terminal
-    return {"data": seeds}
-
+    #shows on webpage at path address
 
 @app.get("/login")
 def user_login():
-    return {"data": "login"}
+    return {"data": "login"} 
 
-
-@app.get("/seedvault")  # get inventory of seeds collected (all listings)
-def show_seedvault():
-    seeds = cursor.execute("""SELECT * FROM seedvault""")  # using SQL query
-    # cursor.execute("""SELECT * FROM seedvault""")  # using SQL query
-    # print(seeds)
-    return {"data": seeds}
-
-
-@app.get("/my_plants")  # get inventory of plants owned (all listings)
-def show_my_plants(db: Session = Depends(get_db)):
-    plants = db.query(sqlalchmodels.Plant).all()  # using SQLAlchemy query
-    return {"data": plants}
-
-
-@app.get("/wishlist")  # get entire plant wishlist (all listings)
-def show_wishlist():
-    return {"data": wishlist}
-
-
-@app.get("/my_supplies")  # get supply inventory (all listings)
-def show_supplies():
-    return {"data": my_supplies}
+# id is a "path parameter"--always returned as a string!
+#@app.get("/seedvault/{id}")  # get individual seed type by ID
+#def get_seed(id: int):
+    #print(id)
+    #return {"data": f"Seed: {id}"}
 
 # revive later for sensor DB (stub):
 # @app.get("/sensors")  #get list of all sensors
@@ -144,32 +59,87 @@ def show_supplies():
 #    return {"data": "sensors"}
 
 
-@app.post("/seedvault")  # post -- add new seed type
-# define function  var = body   type = dict   'Body' imported from FastAPI library
-# def create_new_seed(body: dict = Body(...)):  >> new_seed inherits from Seed
-def create_new_seed(new_seed: Seed):
-    # displayed to user (gets converted to JSON)
-    # print(body)
-    # print(new_seed)  # (printed in terminal)
-    # print(new_seed.dict())
-    # print(new_seed.seed_type)  # (printed in terminal)
-    # print(new_seed.location)  # (printed in terminal)
-    # print(new_seed.date)  # (printed in terminal)
-    # put in Python dictionary format:
-    new_seed_dict = new_seed.dict()
-    # assign ID num from random range (pre-database)--remove once connected to DB:                  #DEBUG
-    new_seed_dict['id'] = randrange(0, 1000000)
-    # add new seed type to dict array my_seeds:
-    my_seeds.append(new_seed_dict)
-    # return {"new_seed": f"title: {body['title']} content: {body['content']}"} #define seed type & collection location
-    # define seed type & collection location
-    # return {"new_seed": f"seed_type: {body['title']} location: {body['content']}"}
-    # return {"new_seed": f"seed_type: {Seed['seed_type']} location: {Seed['location']}"}
-    return {"data": new_seed_dict}  # prints seed data to user
+######################################################################
+#methods formatted as below are for Python-language DB queries using SQLAlchemy library:
+
+@app.get("/my_plants")  # get inventory of plants owned (all listings)
+def show_my_plants(db: Session = Depends(get_db)): #opens DB session for queries
+    plants = db.query(sqlalchmodels.Plant).all()  # using SQLAlchemy query
+    return {"data": plants}
 
 
-# id is a "path parameter"--always returned as a string!
-@app.get("/seedvault/{id}")  # get individual seed type by ID
-def get_seed(id: int):
-    print(id)
-    return {"data": f"Seed: {id}"}
+@app.get("/seedvault")  #USE WITH SQLAlchemy
+def show_seeds(db: Session = Depends(get_db)):  # dependency
+    seeds = db.query(sqlalchmodels.Seed).all()  # using SQLAlchemy query
+    #print(seeds)  # print to terminal
+    return {"data": seeds}
+
+@app.get("/wishlist")  #USE WITH SQLAlchemy
+def show_wishlist(db: Session = Depends(get_db)):  # dependency
+    plants = db.query(sqlalchmodels.Plant).all()  # using SQLAlchemy query
+    #print(seeds)  # print to terminal
+    return {"data": plants}
+
+
+@app.get("/users")  #USE WITH SQLAlchemy
+def show_users(db: Session = Depends(get_db)):  # dependency
+    users = db.query(sqlalchmodels.User).all()  # using SQLAlchemy query
+    return {"data": users}
+
+
+@app.get("/my_supplies")  #USE WITH SQLAlchemy
+def show_users(db: Session = Depends(get_db)):  # dependency
+    supplies = db.query(sqlalchmodels.Supply).all()  # using SQLAlchemy query
+    #print(seeds)  # print to terminal
+    return {"data": supplies}
+
+@app.get("/seedvault/{id}")  #USE WITH SQLAlchemy
+def get_seed(id: int, db: Session = Depends(get_db)):  # dependency
+    seed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id).first()  # using SQLAlchemy query
+    return seed
+
+@app.delete("/seedvault/{id}", )  #USE WITH SQLAlchemy
+def delete_seed(id: int, db: Session = Depends(get_db)):  # dependency
+    delseed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id)  # using SQLAlchemy query
+    seed = delseed.first() 
+    if seed == None:
+        print("no seed by that ID")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    db.delete(seed)
+    db.commit()
+    return {"seed deleted"}
+
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=pydanticmodels.CreateUser)
+def create_new_user(user: pydanticmodels.CreateUser, db: Session = Depends(get_db)):
+    hashed_pw = pwd_context.hash(user.pw)
+    user.pw = hashed_pw
+    new_user = sqlalchmodels.User(uid=user.uid, name=user.name, user_name=user.user_name, join_date=user.join_date, 
+    pw=user.pw, email=user.email, zipcode=user.zipcode) 
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user) #flush
+    return new_user
+    
+@app.post("/seedvault", status_code=status.HTTP_201_CREATED, response_model=pydanticmodels.CreateSeed)
+def create_new_seed(seed: pydanticmodels.CreateSeed, db: Session = Depends(get_db)):
+    new_seed = sqlalchmodels.Seed(id=seed.id, seed_type=seed.seed_type, coll_loc = seed.coll_loc, 
+    coll_date = seed.coll_date, num_coll = seed.num_coll)
+    db.add(new_seed)
+    db.commit()
+    db.refresh(new_seed) #flush
+    return new_seed
+
+@app.put("/seedvault/{id}", response_model=pydanticmodels.EditSeed)  #USE WITH SQLAlchemy
+def edit_seed(id: int, db: Session = Depends(get_db)):  # dependency
+    edseed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id) # using SQLAlchemy query
+    seed = edseed.first() 
+    if seed == None:
+        print("no seed by that ID")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    edseed.update({'seed_type': 'snapdragon', 'coll_loc': 'field', 'num_coll': '34'})
+    db.commit()
+    return seed
+
+
+
+

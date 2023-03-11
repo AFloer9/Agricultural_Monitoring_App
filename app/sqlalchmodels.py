@@ -1,22 +1,24 @@
-# SQLAlchemy database class models--classes inherit from these class models--each db table = model
-
+#ORM models--define database table attributes
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from datetime import date  # for default today's date insertion to date fields
+from sqlalchemy.sql.sqltypes import DATE
+from sqlalchemy.sql.expression import text
 
 from dbsetup import Base
-#from .dbsetup import Base
 
-
+# classes returned to user from API by http GET for reading
+#each class below represents an object in the SQL database and it's columns (SQLALchemy)
 class User(Base):  # extends class Base--allows auto-validation of user input adherence to format--Seed inherits from Pydantic model
     __tablename__ = "users"
     # unique ID number for database
-    id = Column(Integer, primary_key=True, nullable=False)
+    uid = Column(Integer, primary_key=True, nullable=False, unique=True)
     name = Column(String, nullable=False)
     user_name = Column(String, nullable=False)
     # str = date.today()  # default = current date
+    #join_date = Column(DATE, server_default=text('today()'))
     join_date = Column(String, nullable=False, default=date.today)
     pw = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    email = Column(String, nullable=False, unique=True)
     zipcode = Column(String, nullable=False)
 
 

@@ -1,3 +1,4 @@
+#for creating table with raw SQL
 import sqlite3
 db = sqlite3.connect("database.db")
 cursor = db.cursor()
