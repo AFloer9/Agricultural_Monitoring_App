@@ -88,7 +88,7 @@ def show_users(db: Session = Depends(get_db)):  # dependency
 
 
 @app.get("/my_supplies")  #USE WITH SQLAlchemy
-def show_users(db: Session = Depends(get_db)):  # dependency
+def show_supplies(db: Session = Depends(get_db)):  # dependency
     supplies = db.query(sqlalchmodels.Supply).all()  # using SQLAlchemy query
     #print(seeds)  # print to terminal
     return {"data": supplies}
