@@ -8,7 +8,6 @@ class User(BaseModel):  #for HTTP GET  extends class BaseModel
     uid: int  # unique ID number for database
     name: str
     user_name: str
-    #join_date: str = date.today()  # type: ignore # default = current date
     join_date: date = date.today()  # default = current date
     pw: str
     email: str

@@ -23,4 +23,4 @@ def get_db():
         yield db
         print("connection to DB succeeded")  #DEBUG
     finally:
-        db.close()
+        db.close() #close connection to database

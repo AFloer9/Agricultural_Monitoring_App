@@ -1,0 +1,222 @@
+#HTTP RESPONSES:
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/' \
+  -H 'accept: application/json'
+
+  {
+    "Welcome to ": "the Agricultural Monitoring Project"
+  }
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/my_plants' \
+  -H 'accept: application/json'
+Request URL
+http://127.0.0.1:8000/my_plants
+
+#Response body
+{
+  "data": [
+    {
+      "date_acq": "3/8/2023",
+      "id": 1,
+      "watering_week": null,
+      "plant_type": "daisy",
+      "sci_name": null,
+      "num_plants": null,
+      "sunlight_hrs_day": null
+    },
+    {
+      "date_acq": "3/8/2023",
+      "id": 2,
+      "watering_week": null,
+      "plant_type": "sunflower",
+      "sci_name": null,
+      "num_plants": null,
+      "sunlight_hrs_day": null
+    },
+    {
+      "date_acq": "3/8/2023",
+      "id": 3,
+      "watering_week": null,
+      "plant_type": "peony",
+      "sci_name": null,
+      "num_plants": null,
+      "sunlight_hrs_day": null
+    },
+    {
+      "date_acq": "3/8/2023",
+      "id": 4,
+      "watering_week": null,
+      "plant_type": "zinnia",
+      "sci_name": null,
+      "num_plants": null,
+      "sunlight_hrs_day": null
+    },
+    {
+      "date_acq": "3/8/2023",
+      "id": 5,
+      "watering_week": null,
+      "plant_type": "rose",
+      "sci_name": null,
+      "num_plants": null,
+      "sunlight_hrs_day": null
+    },
+    {
+      "date_acq": "3/8/2023",
+      "id": 6,
+      "watering_week": null,
+      "plant_type": "dahlia",
+      "sci_name": null,
+      "num_plants": null,
+      "sunlight_hrs_day": null
+    }
+  ]
+}
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/seedvault' \
+  -H 'accept: application/json'
+
+  {
+    "data": [
+      {
+        "coll_loc": null,
+        "seed_type": "delphinium",
+        "num_coll": null,
+        "id": 4,
+        "coll_date": ""
+      },
+      {
+        "coll_loc": "field",
+        "seed_type": "snapdragon",
+        "num_coll": 34,
+        "id": 5,
+        "coll_date": ""
+      },
+      {
+        "coll_loc": "back yard",
+        "seed_type": "marigold",
+        "num_coll": 2,
+        "id": 10,
+        "coll_date": "2/8/2023"
+      },
+      {
+        "coll_loc": "back yard",
+        "seed_type": "marigold",
+        "num_coll": 2,
+        "id": 12,
+        "coll_date": "2/8/2023"
+      }
+      
+
+      curl -X 'POST' \
+      'http://127.0.0.1:8000/seedvault' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "id": 0,
+      "seed_type": "string",
+      "coll_loc": "string",
+      "coll_date": "2023-03-21",
+      "num_coll": 1
+    }'
+    
+#successful response code 201
+    {
+  "id": 0,
+  "seed_type": "string",
+  "coll_loc": "string",
+  "coll_date": "2023-03-21",
+  "num_coll": 1
+}
+
+#validation error code 422
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/seedvault/10' \
+  -H 'accept: application/json'
+
+{
+  "coll_loc": "back yard",
+  "seed_type": "marigold",
+  "num_coll": 2,
+  "id": 10,
+  "coll_date": "2/8/2023"
+}
+
+curl -X 'PUT' \
+  'http://127.0.0.1:8000/seedvault/10' \
+  -H 'accept: application/json'
+
+  {
+    "id": 0,
+    "seed_type": "string",
+    "coll_loc": "string",
+    "coll_date": "2023-03-21",
+    "num_coll": 1
+  }
+
+  curl -X 'DELETE' \
+  'http://127.0.0.1:8000/seedvault/10' \
+  -H 'accept: application/json'
+
+  [
+    "seed deleted"
+  ]
+
+
+#SCHEMAS:
+
+CreateSeed{
+    id*	Id[...]
+    seed_type*	Seed Type[...]
+    coll_loc*	Coll Loc[...]
+    coll_date	Coll Date[...]
+    num_coll	Num Coll[...]
+     
+    }
+
+    CreateUser{
+        uid*	Uid[...]
+        name*	Name[...]
+        user_name*	User Name[...]
+        join_date	Join Date[...]
+        pw*	Pw[...]
+        email*	Email[...]
+        zipcode*	Zipcode[...]
+         
+        }
+        
+        EditSeed{
+            id*	Id[...]
+            seed_type*	Seed Type[...]
+            coll_loc*	Coll Loc[...]
+            coll_date	Coll Date[...]
+            num_coll	Num Coll[...]
+             
+            }
+
+            HTTPValidationError{
+                detail	Detail[...]
+                 
+                }
+
+                ValidationError{
+                    loc*	Location[...]
+                    msg*	Message[...]
+                    type*	Error Type[...]
+                     
+                    }
