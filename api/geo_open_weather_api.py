@@ -1,18 +1,24 @@
 from json import loads
 from requests import get
-from tools import gen_attribute
+from api.tools import gen_attribute
 
 
 def get_geo_data(data_dict):
-    city = data_dict['name']
-    country = data_dict['country']
-    lat = data_dict['lat']
-    lon = data_dict['lon']
-    
-    print(city)
-    print(country)
-    print(lat)
-    print(lon)
+    city = ''
+    if 'name' in data_dict:
+        city = data_dict['name']
+    country = ''
+    if 'country' in data_dict:
+        country = data_dict['country']
+    lat = ''
+    if 'lat' in data_dict:
+        lat = data_dict['lat']
+    lon = ''
+    if 'lon' in data_dict:
+        lon = data_dict['lon']
+
+    if not lat or not lon:
+        return None
 
     return (city, country, lat, lon)
 

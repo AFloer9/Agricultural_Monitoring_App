@@ -1,7 +1,7 @@
 from json import loads
 from requests import get
-from tools import gen_attribute
-from geo_open_weather_api import gen_city_coordinates, gen_zip_coordinates
+from api.tools import gen_attribute
+from api.geo_open_weather_api import gen_city_coordinates, gen_zip_coordinates
 
 
 def gen_forecast_url(key, lat, lon):
