@@ -23,6 +23,7 @@ class TestOpenWeather(unittest.TestCase):
     def test_get_geo_data(self):
         enough_data = {'name':'Vancouver', 'country':'Washington', 'lat':'45.6418', 'lon':'-122.6251'}
         a = get_geo_data(enough_data)
+        self.assertEqual(a, ('Vancouver', 'Washington', '45.6418', '-122.6251'))
         
         too_much_data = {'name':'Vancouver', 'country':'Washington', 'lat':'45.6418', 'lon':'-122.6251', 'nothing': 'Error'}
         a = get_geo_data(too_much_data)
@@ -34,6 +35,10 @@ class TestOpenWeather(unittest.TestCase):
         not_enough_data = {'name':'Vancouver', 'lat':'45.6418', 'lon':'-122.6251'}
         a = get_geo_data(not_enough_data)
         self.assertEqual(a, ('Vancouver', '', '45.6418', '-122.6251'))
+        not_enough_data = {'lat':'45.6418', 'lon':'-122.6251'}
+        a = get_geo_data(not_enough_data)
+        self.assertEqual(a, ('', '', '45.6418', '-122.6251'))
+        
         not_enough_data = {'name':'Vancouver', 'country':'Washington', 'lon':'-122.6251'}
         a = get_geo_data(not_enough_data)
         self.assertIsNone(a)
@@ -43,9 +48,6 @@ class TestOpenWeather(unittest.TestCase):
         not_enough_data = {'name':'Vancouver', 'country':'Washington'}
         a = get_geo_data(not_enough_data)
         self.assertIsNone(a)
-        not_enough_data = {'lat':'45.6418', 'lon':'-122.6251'}
-        a = get_geo_data(not_enough_data)
-        self.assertEqual(a, ('', '', '45.6418', '-122.6251'))
 
 
 
