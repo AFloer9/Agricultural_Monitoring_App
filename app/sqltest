@@ -1,6 +1,0 @@
-CREATE TABLE supplies (
-    id INTEGER,
-    item  TEXT,
-    purch_date TEXT,
-    brand  TEXT
-);
