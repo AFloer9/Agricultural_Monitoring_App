@@ -5,13 +5,16 @@ from sqlalchemy import create_engine
 
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./database.db"
+#SQLALCHEMY_DATABASE_URL = "sqlite:///./database.db"
 
-engine = create_engine(  #new database factory
+#fake demo SQL database(uncomment this OR the above line)
+SQLALCHEMY_DATABASE_URL = "sqlite:///./demo_database.db"
+
+engine = create_engine(  #new database factory--manages connections to db
     # allow multithread interactions for a single request:
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
-# make database session class
+# make database session class--allows quesries through SQLAlchemy
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()  # used to create ORM models later

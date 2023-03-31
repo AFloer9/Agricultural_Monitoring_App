@@ -1,5 +1,5 @@
 #ORM models--define database table attributes
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
 from datetime import date  # for default today's date insertion to date fields
 from sqlalchemy.sql.sqltypes import DATE
 from sqlalchemy.sql.expression import text
@@ -57,3 +57,22 @@ class Supply(Base):  # extends class Basemodel--allows auto-validation of user i
     amt = Column(Integer, nullable=False, default="1")
     # str = "lbs."  # default = pounds; could be ounces, etc.
     unit = Column(String, nullable=False, default="lbs")
+
+class Sensor(Base):  #table of sensors owned by user
+    __tablename__ = "my_sensors"
+    id = Column(Integer, primary_key=True, nullable=False)
+    sensor_type = Column(String, nullable=False)
+    sensor_loc = Column(String)
+    
+    
+class SensorData(Base):  #data from sensors
+    __tablename__ = "my_data"
+    id = Column(Integer, primary_key=True, nullable=False)
+    humidity = Column(Float)
+    temperature = Column(Float)
+    shade = Column(Float)
+    water_level = Column(Float)
+    
+#class ClimateData(Base): #weather data from APIs  ONLY NEED THIS CLASS IF STORED IN DB, else called directly
+    #pred_rainfall = Column(Float)    
+    #wind_speed = Column(Float)
