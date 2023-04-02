@@ -49,8 +49,8 @@ function showSeeds(){
     //SEEDVAULT.onload = () => {
     //    const data = SEEDVAULT.response
    //     console.log(data);
-    //}
-    
+    }
+
     function appendData(data) {
         var mainContainer = document.getElementById("myData");
         for (var i = 0; i < data.length; i++) {
