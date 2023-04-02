@@ -12,10 +12,10 @@ def get_geo_data(data_dict):
         country = data_dict['country']
     lat = ''
     if 'lat' in data_dict:
-        lat = data_dict['lat']
+        lat = str(data_dict['lat'])
     lon = ''
     if 'lon' in data_dict:
-        lon = data_dict['lon']
+        lon = str(data_dict['lon'])
 
     if not lat or not lon:
         return None

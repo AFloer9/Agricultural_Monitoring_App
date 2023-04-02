@@ -16,9 +16,11 @@ def gen_forecast_url(key, lat, lon):
 
 
 def run_open_weather_api(key, lat, lon):
-    if lat < -90 or lat > 90:
+    temp_lat = float(lat)
+    temp_lon = float(lon)
+    if temp_lat < -90.0 or temp_lat > 90.0:
         return None
-    if lon < -180 or lon > 180:
+    if temp_lon < -180.0 or temp_lon > 180.0:
         return None
 
     url = gen_forecast_url(key, lat, lon)
@@ -29,10 +31,6 @@ def run_open_weather_api(key, lat, lon):
     if data['cod'] != '200':
         return None
     
-    i = 0
-    for col in data['list']:
-        i += 1
-        print(col)
-    print(f"Total: {i}")
+    return data['list']
 
 
