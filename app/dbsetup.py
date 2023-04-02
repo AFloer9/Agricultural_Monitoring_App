@@ -1,3 +1,4 @@
+# Author: Anna Hyer Spring 2023 Class: Intro to Programming
 
 #SQLAlchemy database setup
 # slightly adapted from FastAPI documentation  https://fastapi.tiangolo.com/tutorial/sql-databases/#__tabbed_2_3  :
@@ -5,10 +6,10 @@ from sqlalchemy import create_engine
 
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-#SQLALCHEMY_DATABASE_URL = "sqlite:///./database.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./database.db"
 
 #fake demo SQL database(uncomment this OR the above line)
-SQLALCHEMY_DATABASE_URL = "sqlite:///./demo_database.db"
+#SQLALCHEMY_DATABASE_URL = "sqlite:///./demo_database.db"
 
 engine = create_engine(  #new database factory--manages connections to db
     # allow multithread interactions for a single request:

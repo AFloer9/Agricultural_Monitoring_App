@@ -1,3 +1,5 @@
+# Author: Anna Hyer Spring 2023 Class: Intro to Programming
+
 #ORM models--define database table attributes
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
 from datetime import date  # for default today's date insertion to date fields
@@ -28,7 +30,8 @@ class Seed(Base):  # extends class Basemodel--allows auto-validation of user inp
     seed_type = Column(String, nullable=False)
     coll_loc = Column(String)
     # str = date.today()  # default = current date
-    coll_date = Column(String, nullable=False, default=date.today)
+    #coll_date = Column(String, nullable=False, default=date.today)
+    coll_date = Column(DATE, default=date.today)
     num_coll = Column(Integer, default="1")  # int = "1"  # default = 1 seed
 
 

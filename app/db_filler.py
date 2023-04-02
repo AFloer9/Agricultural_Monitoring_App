@@ -1,3 +1,5 @@
+# Author: Anna Hyer Spring 2023 Class: Intro to Programming
+
 import random
 import sqlalchmodels
 from sqlalchemy.orm import sessionmaker

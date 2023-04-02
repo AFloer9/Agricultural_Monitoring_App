@@ -1,3 +1,5 @@
+# Author: Anna Hyer Spring 2023 Class: Intro to Programming
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLineEdit, QWidget, QFormLayout, QApplication, QPushButton, QHBoxLayout
 import sys

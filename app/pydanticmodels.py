@@ -1,3 +1,4 @@
+# Author: Anna Hyer Spring 2023 Class: Intro to Programming
 
 #SCHEMAS--structure requests--allows auto-validation of output data adherence to format when retrurned to user
 from pydantic import BaseModel, EmailStr, Field
