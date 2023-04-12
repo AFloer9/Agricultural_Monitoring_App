@@ -9,17 +9,10 @@ from sqlalchemy import select, func
 #import pydanticmodels
 #from pydantic import BaseModel
 
-PORT = 'COM5'
-#s = Serial(PORT, 9600, timeout=3)
-#print(s.name)
-#print(s.readable())
-#print(s.get_settings())
 
 sqlalchmodels.Base.metadata.drop_all(bind=engine)
 sqlalchmodels.Base.metadata.create_all(bind=engine)
 
-# database libs you are using  ** what should i install maybe how to insert
-# should we do some networking?
 
 def insert_test_data():
 	with Session(engine) as session:
@@ -43,8 +36,6 @@ def insert_test_data():
 
 insert_test_data()
 
-#sensors = ["PHOTO", "MOIST", "TEMP", "DHT_HUM", "DHT_TEMP", "WATER"]
-
 
 def addSensor(sensorName):
 	# maybe date sensor was added...  label is like look above maybe?
@@ -60,6 +51,7 @@ def addSensor(sensorName):
 
 #print(addSensor('test_sensor'))
 #print(addSensor('None_sensor'))
+
 
 def addData(data_list, sensor_dict): # to db
 	with Session(engine) as session:
@@ -85,29 +77,68 @@ def addData(data_list, sensor_dict): # to db
 #data_info = [['test_sensor', 1.3], ['test_sensor', 1.4], ['test_sensor', 1.5]]
 #addData(data_info, information)
 
+
 def getDbData(attribute, constraints):
 	pass
 
-def getCurrentSensors():
-	# maybe readData takes in the sensors that will be used
-	# like structure '<name of sensor> <data>'
-	# at end tell what data was ignored and how much was recorded
-	pass
 
-def readData(port):
-	# maybe how much i should read param?
+def getCurrentSensors(sensor_list, loc):
+	# returns dictionary of all the sensors with their ID
+	# maybe insert loc somewhere else
+	return {sensor:{'id':addSensor(sensor), 'loc':loc} for sensor in sensor_list}
 
-	# make sure data is readable
-	#print(s.readable())
 
-	# return list or store in db
-	pass
+def readSensors(s, n):
+	data = []
+
+	i = 0
+	while True:
+		line = s.readline()
+		if not line:
+			#print(f"{i}. Didn't find anything")
+			continue
+		else:
+			data.append(line.decode().strip().split()) # maybe split and put in a list
+		i += 1
+		if i == n:
+			break
+	
+	print(data)
+	print(f"Total: {i}")
+	print('')
+
+	return data
+
+
+def readData(port, sensor_list, read_n_data, loc):
+	with Serial(PORT, 9600, timeout=3) as s:
+		#print(s.name)
+		#print(s.readable())
+		#print(s.get_settings())
+		
+		sensor_info = getCurrentSensors(sensor_list, loc)
+		n = read_n_data * len(sensor_info) # number of data to read in (sensors are expected to run one after another)
+		data = readSensors(s, n)
+	
+		addData(data, sensor_info)
+		# store in db
+	
+
+PORT = 'COM5'
+sensors = ["PHOTO", "MOIST", "TEMP", "DHT_HUM", "DHT_TEMP", "WATER"]
+data_points = 5
+loc = 'backyard'
+readData(PORT, sensors, data_points, loc)
 
 
 def show_sensor_data():
 	with Session(engine) as session:
-		stmt = session.query(sqlalchmodels.SensorRelation).all()
+		stmt = session.query(sqlalchmodels.Sensor).all()
 		
+		for row in stmt:
+			print(row)
+		print('')
+		stmt = session.query(sqlalchmodels.SensorData.data_id, sqlalchmodels.SensorData.data, sqlalchmodels.SensorData.sensor_loc).all()
 		for row in stmt:
 			print(row)
 	#sensor_data = db.query(sqlalchmodels.SensorData).all()
