@@ -1,4 +1,4 @@
-# Author: Anna Hyer Spring 2023 Class: Intro to Programming
+# Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
 
 from fastapi import Body, FastAPI, Depends, HTTPException, status  # import library/framework
 from pydantic import BaseModel  # classes inherit from base model
@@ -10,7 +10,7 @@ from dbsetup import engine, get_db
 from routers import userspathop, gardenpathop
 
 
-sqlalchmodels.Base.metadata.drop_all(bind=engine) #tclears DB
+#sqlalchmodels.Base.metadata.drop_all(bind=engine) #tclears DB upon restarting main--COMMENT OUT FOR PERSISTENT DB
 sqlalchmodels.Base.metadata.create_all(bind=engine) #creates all tables according to SQLAlchemy models
 
 from db_filler import fill_db  #uncomment for populating DB for demo
@@ -62,7 +62,7 @@ def show_seeds(db: Session = Depends(get_db)):  # dependency
     seeds = db.query(sqlalchmodels.Seed).all() 
     #print(seeds)  # print to terminal
     #return {"data": seeds}
-    return {"data": seeds}
+    return Body('index.html')
 
 @app.get("/wishlist") 
 def show_wishlist(db: Session = Depends(get_db)):  
@@ -97,10 +97,11 @@ def show_sensor_data(db: Session = Depends(get_db)):
 # id is a "path parameter"--always returned as a string!
 @app.get("/seedvault/{id}") 
 def get_seed(id: int, db: Session = Depends(get_db)):  
-    seed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id).first()  # using SQLAlchemy query
+    seed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id).first()  # using SQLAlchemy query--stop looking when found
     #return seed
     print(id)
-    return {"data": f"Seed: {id}"}
+    #return {"data": f"Seed: {id}"}
+    return {"data": seed}
 
 @app.delete("/seedvault/{id}", ) 
 def delete_seed(id: int, db: Session = Depends(get_db)):  
@@ -117,7 +118,7 @@ def delete_seed(id: int, db: Session = Depends(get_db)):
 def create_new_user(user: pydanticmodels.CreateUser, db: Session = Depends(get_db)):
     hashed_pw = pwd_context.hash(user.pw)
     user.pw = hashed_pw
-    new_user = sqlalchmodels.User(uid=user.uid, name=user.name, user_name=user.user_name, join_date=user.join_date, 
+    new_user = sqlalchmodels.User(name=user.name, user_name=user.user_name, join_date=user.join_date, 
     pw=user.pw, email=user.email, zipcode=user.zipcode) 
     db.add(new_user)
     db.commit()
@@ -126,7 +127,9 @@ def create_new_user(user: pydanticmodels.CreateUser, db: Session = Depends(get_d
     
 @app.post("/seedvault", status_code=status.HTTP_201_CREATED, response_model=pydanticmodels.CreateSeed)
 def create_new_seed(seed: pydanticmodels.CreateSeed, db: Session = Depends(get_db)):
-    new_seed = sqlalchmodels.Seed(id=seed.id, seed_type=seed.seed_type, coll_loc = seed.coll_loc, 
+    #new_seed = sqlalchmodels.Seed(id=seed.id, seed_type=seed.seed_type, coll_loc = seed.coll_loc, 
+    #coll_date = seed.coll_date, num_coll = seed.num_coll)
+    new_seed = sqlalchmodels.Seed(seed_type=seed.seed_type, coll_loc = seed.coll_loc, #NO ID
     coll_date = seed.coll_date, num_coll = seed.num_coll)
     if new_seed.seed_type == None:
         return {"Please provide a seed type"}
@@ -134,7 +137,7 @@ def create_new_seed(seed: pydanticmodels.CreateSeed, db: Session = Depends(get_d
         db.add(new_seed)
         db.commit()
         db.refresh(new_seed) #flush
-        return new_seed
+        return new_seed #return JSON model of newly-created seed to user
 
 @app.put("/seedvault/{id}", response_model=pydanticmodels.EditSeed) 
 def edit_seed(id: int, db: Session = Depends(get_db)): 
@@ -143,7 +146,9 @@ def edit_seed(id: int, db: Session = Depends(get_db)):
     if seed == None:
         print("no seed by that ID")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    edseed.update({'seed_type': 'snapdragon', 'coll_loc': 'field', 'num_coll': '34'})
+    #edseed.update({'seed_type': 'snapdragon', 'coll_loc': 'field', 'num_coll': '34'})
+    edseed.update(sqlalchmodels.Seed(seed_type=seed.seed_type, coll_loc = seed.coll_loc, #NO ID
+    coll_date = seed.coll_date, num_coll = seed.num_coll))
     db.commit()
     return seed
 

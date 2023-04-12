@@ -1,4 +1,4 @@
-#HTTP RESPONSES:
+#HTTP RESPONSES:           GENERATED FROM SWAGGER UI 
 
 curl -X 'GET' \
   'http://127.0.0.1:8000/' \

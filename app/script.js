@@ -1,4 +1,6 @@
-// Author: Anna Hyer Spring 2023 Class: Intro to Programming
+// Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
+
+
 
 const SEEDVAULT = new XMLHttpRequest(); //make new request object
 const url = 'https://127.0.0.1:8000/seedvault'; //
@@ -27,6 +29,8 @@ function showAccount(){
     console.log("showAccount")
 
 }
+
+//display seedvault to user--iterate through JSON format for each seed? "i" less than total # of database indexes?
 //showSeeds(SEEDVAULT)
 //function showSeeds(url){
 function showSeeds(){

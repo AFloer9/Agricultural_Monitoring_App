@@ -1,4 +1,4 @@
-# Author: Anna Hyer Spring 2023 Class: Intro to Programming
+# Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
 
 #SQLAlchemy database setup
 # slightly adapted from FastAPI documentation  https://fastapi.tiangolo.com/tutorial/sql-databases/#__tabbed_2_3  :
@@ -14,8 +14,8 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///./database.db"
 engine = create_engine(  #new database factory--manages connections to db
     # allow multithread interactions for a single request:
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-# make database session class--allows quesries through SQLAlchemy
+    )
+# make database session class--allows queries through SQLAlchemy
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()  # used to create ORM models later
