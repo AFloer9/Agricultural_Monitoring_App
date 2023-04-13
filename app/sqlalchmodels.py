@@ -1,7 +1,7 @@
 # Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
 
 #ORM models--define database table attributes
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Sequence, Date
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Sequence, Date, JSON
 #from datetime import date  # for default today's date insertion to date fields
 from sqlalchemy.sql.sqltypes import DATE
 from sqlalchemy.sql.expression import text
@@ -28,12 +28,8 @@ class User(Base):  # extends class Base--allows auto-validation of user input ad
 class Seed(Base):  # extends class Basemodel--allows auto-validation of user input adherence to format--Seed inherits from Pydantic model
     __tablename__ = "seedvault"
     id = Column(Integer, primary_key=True, nullable=False)
-    seed_type = Column(String, nullable=False)
-    coll_loc = Column(String)
-    # str = date.today()  # default = current date
-    #coll_date = Column(String, nullable=False, default=date.today)
-    #coll_date = Column(DATE)
-    #coll_date = Column(String, default=Date)
+    seed_type = Column(String, nullable=False,)
+    coll_loc = Column(String, JSON)
     coll_date = Column(String, default=Date, server_default=text('today()'))
     num_coll = Column(Integer, default="1")  # int = "1"  # default = 1 seed
 
@@ -43,7 +39,6 @@ class Plant(Base):  # extends class Basemodel--allows auto-validation of user in
     id = Column(Integer, primary_key=True, nullable=False)
     plant_type = Column(String, nullable=False)
     sci_name = Column(String)
-    # str = date.today()  # default = current date
     date_acq = Column(String)
     num_plants = Column(Integer, default="1")  # int = "1"  # default = 1 plant
     watering_week = Column(Integer, default="1")
@@ -55,30 +50,50 @@ class Supply(Base):  # extends class Basemodel--allows auto-validation of user i
     id = Column(Integer, primary_key=True, nullable=False)
     supply_type = Column(String, nullable=False)
     brand_name = Column(String)
-    # str = date.today()  # default = current date
     purch_acq = Column(String)
-    # int = "1"  # default = 1 item/container
     num_supply = Column(Integer, default="1")
-    # int = "1"  # default = 1 unit
     amt = Column(Integer, default="1")
-    # str = "lbs."  # default = pounds; could be ounces, etc.
     unit = Column(String, default="lbs")
 
-class Sensor(Base):  #table of sensors owned by user
-    __tablename__ = "my_sensors"
-    id = Column(Integer, primary_key=True, nullable=False)
-    sensor_type = Column(String, nullable=False)
-    sensor_loc = Column(String)
+#class Sensor(Base):  #table of sensors owned by user
+#    __tablename__ = "my_sensors"
+#    id = Column(Integer, primary_key=True, nullable=False)
+ #   sensor_type = Column(String, nullable=False)
+#    sensor_loc = Column(String)
     
     
-class SensorData(Base):  #data from sensors
-    __tablename__ = "my_data"
-    id = Column(Integer, primary_key=True, nullable=False)
-    humidity = Column(Float)
-    temperature = Column(Float, nullable=False)
-    shade = Column(Float)
-    water_level = Column(Float)
+#class SensorData(Base):  #data from sensors#
+   # __tablename__ = "my_data"
+   # id = Column(Integer, primary_key=True, nullable=False)
+   # humidity = Column(Float)
+   # temperature = Column(Float, nullable=False)
+    #shade = Column(Float)
+    #water_level = Column(Float)
     
 #class ClimateData(Base): #weather data from APIs  ONLY NEED THIS CLASS IF STORED IN DB, else called directly
     #pred_rainfall = Column(Float)    
     #wind_speed = Column(Float)
+    
+###Alex's code>>>>
+class Sensor(Base):
+	__tablename__ = 'my_sensors'
+	ID = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+	sensor_type = Column(String, nullable=False)
+
+	def __repr__(self):
+		return f"{self.ID} {self.sensor_type}"
+
+class SensorRelation(Base):
+	__tablename__ = 'sensor_relation'
+	sensor_id = Column(Integer, ForeignKey('my_sensors.ID'), primary_key=True, nullable=False)
+	data_id = Column(Integer, ForeignKey('sensor_data.data_id'), primary_key=True, nullable=False)
+
+	def __repr__(self):
+		return f"{self.sensor_id} {self.data_id}"
+
+class SensorData(Base):
+	__tablename__ = 'sensor_data'
+	# date
+	data_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+	data = Column(Float)
+	sensor_loc = Column(String)

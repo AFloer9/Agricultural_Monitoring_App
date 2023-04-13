@@ -1,9 +1,14 @@
 # Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
 
-from fastapi import Body, FastAPI, Depends, HTTPException, status  # import library/framework
+from fastapi import Body, FastAPI, Depends, HTTPException, status, Request  # import library/framework
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel  # classes inherit from base model
 from datetime import date  # for default today's date insertion to date fields
 from sqlalchemy.orm import Session
+#from serial import Serial
+import serial_data #Alex
 import pydanticmodels
 import sqlalchmodels  
 from dbsetup import engine, get_db
@@ -23,6 +28,8 @@ pwd_context = CryptContext(schemes=["bcrypt"]) #hash algorithm type--only needed
 
 
 app = FastAPI()  # create instance of FastAPI named 'app'
+
+templates = Jinja2Templates(directory="templates") #create template object for HTML
 
 app.include_router(gardenpathop.router) #router object--directs API to routes
 app.include_router(userspathop.router)

@@ -2,4 +2,9 @@
 app\main--initial_code 2-13-23.py
 database.db
 mainrawSQl.py
+__pycache__
+demo_database.db
+test_database.db
 .gitignore
+
+

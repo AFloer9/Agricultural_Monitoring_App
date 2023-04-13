@@ -77,17 +77,20 @@ def fill_db():
         )
 
         demosensor = sqlalchmodels.Sensor(  #table of sensors owned by user
-            id =  fake.unique.random_int(1, 3000),
+            ID =  fake.unique.random_int(1, 3000),
             sensor_type = fake.word(),
-            sensor_loc =  fake.word()
+            #sensor_loc =  fake.word()   #commented out for Alex's version
         )
         
-        demodata = sqlalchmodels.SensorData(  #data from sensors
-            id =  fake.unique.random_int(1, 3000),
-            humidity =  fake.random_int(20, 100), #percentage (realistic likely range)
-            temperature =  fake.random_int(10, 110), #Fahrenheit
-            shade =  fake.random_int(0, 100),  #percentage
-            water_level =  fake.random_int(1, 100)  #percentage--will depend on vessel
+        demodata = sqlalchmodels.SensorData(  #data from sensors  commented out: my version
+            #id =  fake.unique.random_int(1, 3000),   #my version
+            data_id =  fake.unique.random_int(1, 3000),   #Alex
+            data = fake.word(),   #Alex
+            #humidity =  fake.random_int(20, 100), #percentage (realistic likely range)
+            #temperature =  fake.random_int(10, 110), #Fahrenheit
+            #shade =  fake.random_int(0, 100),  #percentage
+            #water_level =  fake.random_int(1, 100)  #percentage--will depend on vessel
+            sensor_loc =  fake.word()  #pasted for Alex's version
         )
         Session.add_all
         Session.commit  
