@@ -1,3 +1,4 @@
+# Author: Alexander Flores Spring 2023 Class: CS 320
 from json import loads
 from requests import get
 from api.tools import gen_attribute

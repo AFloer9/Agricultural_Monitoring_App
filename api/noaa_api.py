@@ -1,3 +1,4 @@
+# Author: Alexander Flores Spring 2023 Class: CS 320
 import json
 import requests
 from datetime import datetime

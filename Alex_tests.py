@@ -1,3 +1,4 @@
+# Author: Alexander Flores Spring 2023 Class: CS 320
 import unittest
 from api.geo_open_weather_api import gen_city_coordinates, gen_zip_coordinates, get_geo_data
 from api.open_weather_api import run_open_weather_api, gen_forecast_url

@@ -1,3 +1,4 @@
+# Author: Alexander Flores Spring 2023 Class: CS 320
 from pathlib import Path
 import scrapy
 

@@ -1,3 +1,4 @@
+# Author: Alexander Flores Spring 2023 Class: CS 320
 from datetime import datetime
 
 def gen_attribute(variable, data):
