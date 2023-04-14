@@ -1,8 +1,9 @@
 # Author: Alexander Flores Spring 2023 Class: CS 320
+
+from datetime import datetime
 from serial import Serial
 from time import sleep
 
-from datetime import date
 from sqlalchemy.orm import Session
 import sqlalchmodels
 from dbsetup import engine, get_db
@@ -18,6 +19,7 @@ sqlalchmodels.Base.metadata.create_all(bind=engine)
 def insert_test_data():
 	with Session(engine) as session:
 		demo_sensorData = sqlalchmodels.SensorData(
+			date = datetime.now(),
 			data = 1.0,
 			sensor_loc = 'vancouver'
 			)
@@ -54,11 +56,13 @@ def addSensor(sensorName):
 #print(addSensor('None_sensor'))
 
 
-def addData(data_list, sensor_dict): # to db
+def addData(data_list, sensor_dict): # check what is returned when there is nothing in the db
 	with Session(engine) as session:
-		#what if nothing
+		date = datetime.now()
+
 		max_value = session.query(func.max(sqlalchmodels.SensorData.data_id)).all()
-		if not max_value:
+		print(max_value)
+		if not max_value or max_value[0][0] == None:
 			max_value = 0
 		else:
 			max_value = max_value[0][0]
@@ -67,16 +71,16 @@ def addData(data_list, sensor_dict): # to db
 			max_value += 1
 			sensor_info = sensor_dict[row[0]] # check if none
 
-			sensorData = sqlalchmodels.SensorData(data_id = max_value, data = row[1], sensor_loc = sensor_info['loc'])
+			sensorData = sqlalchmodels.SensorData(date = date, data_id = max_value, data = row[1], sensor_loc = sensor_info['loc'])
 			sensorRelation = sqlalchmodels.SensorRelation(sensor_id = sensor_info['id'], data_id = max_value)
 			
 			session.add_all([sensorData, sensorRelation])
 		
 		session.commit()
 
-#information = {'test_sensor':{'loc':'vancouver', 'id': 5}}
-#data_info = [['test_sensor', 1.3], ['test_sensor', 1.4], ['test_sensor', 1.5]]
-#addData(data_info, information)
+# information = {'test_sensor':{'loc':'vancouver', 'id': 5}}
+# data_info = [['test_sensor', 1.3], ['test_sensor', 1.4], ['test_sensor', 1.5]]
+# addData(data_info, information)
 
 
 def getDbData(attribute, constraints):
@@ -129,7 +133,7 @@ PORT = 'COM5'
 sensors = ["PHOTO", "MOIST", "TEMP", "DHT_HUM", "DHT_TEMP", "WATER"]
 data_points = 5
 loc = 'backyard'
-readData(PORT, sensors, data_points, loc)
+#readData(PORT, sensors, data_points, loc)
 
 
 def show_sensor_data():
@@ -139,7 +143,10 @@ def show_sensor_data():
 		for row in stmt:
 			print(row)
 		print('')
-		stmt = session.query(sqlalchmodels.SensorData.data_id, sqlalchmodels.SensorData.data, sqlalchmodels.SensorData.sensor_loc).all()
+		stmt = session.query(sqlalchmodels.SensorData.date, sqlalchmodels.SensorData.data_id, sqlalchmodels.SensorData.data, sqlalchmodels.SensorData.sensor_loc).all()
+		for row in stmt:
+			print(row)
+		stmt = session.query( sqlalchmodels.Sensor.ID).all()
 		for row in stmt:
 			print(row)
 	#sensor_data = db.query(sqlalchmodels.SensorData).all()

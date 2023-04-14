@@ -1,5 +1,6 @@
 # Author: Alexander Flores Spring 2023 Class: CS 320
-from sqlalchemy import Column, ForeignKey, Integer, String, Float
+
+from sqlalchemy import Column, ForeignKey, Integer, String, Float, DateTime
 from dbsetup import Base
 
 
@@ -21,7 +22,7 @@ class SensorRelation(Base):
 
 class SensorData(Base):
 	__tablename__ = 'sensor_data'
-	# date
+	date = Column(DateTime)
 	data_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
 	data = Column(Float)
 	sensor_loc = Column(String)

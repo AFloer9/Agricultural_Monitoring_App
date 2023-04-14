@@ -95,7 +95,7 @@ void moistureSensor() {
   delay(10);
   float signal = analogRead(A1);
   digitalWrite(12, LOW);
-  Serial.print("Moisture sensor: ");
+  Serial.print("MOIST ");
   Serial.println(signal);
 
 }
@@ -164,7 +164,7 @@ void waterSensor() {
   delay(10);
   float signal = analogRead(A5);
   digitalWrite(3, LOW);  
-  Serial.print("Water sensor: ");
+  Serial.print("WATER ");
   Serial.println(signal); 
   
 }
