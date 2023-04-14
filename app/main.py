@@ -15,7 +15,7 @@ from dbsetup import engine, get_db
 from routers import userspathop, gardenpathop, sensorpathop
 
 
-sqlalchmodels.Base.metadata.drop_all(bind=engine) #tclears DB upon restarting main--COMMENT OUT FOR PERSISTENT DB
+#sqlalchmodels.Base.metadata.drop_all(bind=engine) #tclears DB upon restarting main--COMMENT OUT FOR PERSISTENT DB
 sqlalchmodels.Base.metadata.create_all(bind=engine) #creates all tables according to SQLAlchemy models--
 
 #from db_filler import fill_db  #uncomment for populating DB for demo

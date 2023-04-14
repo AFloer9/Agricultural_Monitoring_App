@@ -41,21 +41,21 @@ def show_sensors(db: Session = Depends(get_db)):
     seeds = db.query(sqlalchmodels.Sensor).all() 
     return seeds
     
-@router.post("/my_sensors")  #ADD new sensor
+@router.post("/my_sensors/{sensorName}")  #ADD new sensor
 def addSensor(sensorName):
 	# maybe date sensor was added...  label is like look above maybe?
 	with Session(engine) as session:
 		result = session.query(sqlalchmodels.Sensor.ID).filter(sqlalchmodels.Sensor.sensor_type == sensorName).all()
 
-		if not result:
+		if not result:      #if a sensor with this name is not found
 			session.add(sqlalchmodels.Sensor(sensor_type = sensorName))
 			session.commit()
 			result = session.query(sqlalchmodels.Sensor.ID).filter(sqlalchmodels.Sensor.sensor_type == sensorName).all()
 
-		return result[0][0]
+		return result[0][0]     #return ID of sensors with this name
 
-@router.post("/sensor_data")            #ADD sensor data to database (from Arduino)
-def addData(data_list, sensor_dict): # to db   
+#@router.post("/sensor_data")            #ADD sensor data to database (from Arduino)
+#def addData(data_list, sensor_dict): # to db   
 	with Session(engine) as session:
 		#what if nothing
 		max_value = session.query(func.max(sqlalchmodels.SensorData.data_id)).all()    #get list of all sensor data

@@ -1,3 +1,4 @@
+# Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
 
 from fastapi.testclient import TestClient
 import pytest
@@ -8,8 +9,10 @@ from sqlalchemy import create_engine, insert, Table, Column
 from sqlalchemy.orm import sessionmaker, declarative_base
 import pydanticmodels
 import sqlalchmodels
-from faker import Faker, providers
+from faker import Faker
+from faker.providers import BaseProvider
 import random
+from db_filler import fill_db
 
 #fake test SQL database:
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_database.db"
@@ -19,6 +22,14 @@ engine = create_engine(  #new database factory
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
 fake = Faker() #fake object for testing
+
+class SeedProvider(BaseProvider):
+    def seed(self):
+        seed = ['sunflower', 'zinnia', 'pansy']
+        return random.choice(seed)
+
+fake.add_provider(SeedProvider)
+Faker.seed()
 
 # make database session class:
 TestSessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
@@ -37,26 +48,38 @@ def dbsession():
         testdb.close() #close connection to database
     
     #populate DB:
+    
+    
+    #seed = ['sunflower', 'zinnia', 'pansy']
+    
+    #fill_db()
+    
+    #------------------------------------------------
+    
     i = 1
     while i < 100:
         i += 1
         testseed = sqlalchmodels.Seed(
             id = fake.unique.random_int(1, 300),
             seed_type = fake.word(),
+            #seed_type = fake.seed(),
+            #seed_type = fake.random.seed(),
             coll_loc = fake.city(), 
             coll_date = fake.date(), 
             num_coll = fake.random_int(1, 200)
         )  
+        
         testdb.add_all([testseed])
         testdb.commit() 
     # end while
+    #-------------------------------------------------
            
 @pytest.fixture(scope="module")  
 def client(dbsession):
     def override_get_db():  # dependency override, for testing only
         try:
             yield dbsession #return fresh database session
-        finally:
+        finally:        
             dbsession.close()
     app.dependency_overrides[get_db] = override_get_db   
     yield TestClient(app)   # return fresh TestClient for testing

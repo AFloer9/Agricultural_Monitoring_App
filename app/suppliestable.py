@@ -1,3 +1,5 @@
+# Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
+
 #for creating table with raw SQL
 import sqlite3
 db = sqlite3.connect("database.db")
