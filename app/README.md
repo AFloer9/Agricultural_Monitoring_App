@@ -1,4 +1,4 @@
-# Agricultural_Monitoring_App
+ # Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
 
 API instructions:
 path: ...\GitHub\Agricultural_Monitoring_App\app
