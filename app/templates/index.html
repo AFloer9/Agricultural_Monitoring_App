@@ -36,6 +36,12 @@
         <!--button onclick="{{ url_for(path= 'test_show_seeds') }}" >Python</button--> 
 
         <script defer src="gardenpathop.py"></script>
+
+        <!--<script>
+            window.data = {{data|default:"{}"|safe}}
+        </script>-->
+
+
         <!--makes main.py module accessible to front end-->
         <script>
             function page_load(){
@@ -54,7 +60,7 @@
         </script>
         </body>
     
-        <p><a href="{{ url_for(name= 'test_show_main', path= '/app/routers/gardenpathop.py') }}">seedvault</a></p>
+        <p><a href="{{ url_for(name= 'test_show_seeds', path= '/app/routers/gardenpathop.py') }}">seedvault</a></p>
         <p><a href="/seedvault">seedvault2</a></p>    <!--link to seedvault page-->
         <p><a href="/seedvault">seedvault3</a></p>
     </body>

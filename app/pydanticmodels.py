@@ -7,7 +7,7 @@ from typing import Optional, Dict
 
 #BASELINE SCHEMAS--for HTTP GET all
 class User(BaseModel):  #for HTTP GET  extends class BaseModel
-    uid: int  # unique ID number for database
+    #uid: int  # unique ID number for database
     name: str
     user_name: str
     join_date: date = date.today()  # default = current date
@@ -15,7 +15,7 @@ class User(BaseModel):  #for HTTP GET  extends class BaseModel
     email: EmailStr #ensures valid email format
     zipcode: int
     class Config:       #makes Pydantic model compatible with ORM (SQLAlchemy)--converts
-        orm_mode = True
+        orm_mode = True     #makes models include relationship data when returned from pathop
 
 
 class Seed(BaseModel):

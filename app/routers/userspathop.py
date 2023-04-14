@@ -11,9 +11,10 @@ from dbsetup import get_db
 router = APIRouter()
 
 #user-related routes
-
-@router.post("/users", status_code=status.HTTP_201_CREATED, response_model=pydanticmodels.CreateUser) #create new user
+@router.post("/users", status_code=status.HTTP_201_CREATED, response_model=pydanticmodels.CreateUser)
+#@router.post("/users", status_code=status.HTTP_201_CREATED) #create new user
 def create_new_user(user: pydanticmodels.CreateUser, db: Session = Depends(get_db)):
+
     #hashed_pw = pwd_context.hash(user.pw)
     #user.pw = hashed_pw
     new_user = sqlalchmodels.User(name=user.name, user_name=user.user_name, join_date=user.join_date, 

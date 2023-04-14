@@ -12,16 +12,16 @@ import serial_data #Alex
 import pydanticmodels
 import sqlalchmodels  
 from dbsetup import engine, get_db
-from routers import userspathop, gardenpathop
+from routers import userspathop, gardenpathop, sensorpathop
 
 
-#sqlalchmodels.Base.metadata.drop_all(bind=engine) #tclears DB upon restarting main--COMMENT OUT FOR PERSISTENT DB
-sqlalchmodels.Base.metadata.create_all(bind=engine) #creates all tables according to SQLAlchemy models
+sqlalchmodels.Base.metadata.drop_all(bind=engine) #tclears DB upon restarting main--COMMENT OUT FOR PERSISTENT DB
+sqlalchmodels.Base.metadata.create_all(bind=engine) #creates all tables according to SQLAlchemy models--
 
-from db_filler import fill_db  #uncomment for populating DB for demo
+#from db_filler import fill_db  #uncomment for populating DB for demo
 
 #populate table if desired (comment out if not):
-fill_db() 
+#fill_db() 
 
 from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"]) #hash algorithm type--only needed for user passowrd implementation
@@ -33,6 +33,7 @@ templates = Jinja2Templates(directory="templates") #create template object for H
 
 app.include_router(gardenpathop.router) #router object--directs API to routes
 app.include_router(userspathop.router)
+app.include_router(sensorpathop.router)
 
 #path operations:
 # API server drills down thru request functions until it finds an HTTP request match:
@@ -68,8 +69,8 @@ def show_my_plants(db: Session = Depends(get_db)): #opens DB session for queries
 def show_seeds(db: Session = Depends(get_db)):  # dependency
     seeds = db.query(sqlalchmodels.Seed).all() 
     #print(seeds)  # print to terminal
-    #return {"data": seeds}
-    return Body('index.html')
+    return {"data": seeds}
+    #return Body('index.html')
 
 @app.get("/wishlist") 
 def show_wishlist(db: Session = Depends(get_db)):  
@@ -84,21 +85,21 @@ def show_users(db: Session = Depends(get_db)):
     return {"data": f"User: {id}"}
 
 
-@app.get("/my_supplies") 
+@app.get("/my_supplies") #original--moved to 
 def show_supplies(db: Session = Depends(get_db)):  
     supplies = db.query(sqlalchmodels.Supply).all() 
     #print(seeds)  # print to terminal
     return {"data": supplies}
 
-@app.get("/my_sensors")
-def show_sensors(db: Session = Depends(get_db)):
-    sensors = db.query(sqlalchmodels.Sensor).all()
-    return {"data": sensors}
+#@app.get("/my_sensors")
+#def show_sensors(db: Session = Depends(get_db)):
+    #sensors = db.query(sqlalchmodels.Sensor).all()
+    #return {"data": sensors}
 
-@app.get("/my_data")
-def show_sensor_data(db: Session = Depends(get_db)):
-    sensor_data = db.query(sqlalchmodels.SensorData).all()
-    return {"data": sensor_data}
+#@app.get("/sensor_data")
+#def show_sensor_data(db: Session = Depends(get_db)):
+    #sensor_data = db.query(sqlalchmodels.SensorData).all()
+    #return {"data": sensor_data}
 
 
 # id is a "path parameter"--always returned as a string!
