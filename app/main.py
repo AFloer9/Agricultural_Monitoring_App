@@ -1,39 +1,34 @@
-# Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
+# main.py
 
-from fastapi import Body, FastAPI, Depends, HTTPException, status, Request  # import library/framework
-from fastapi.responses import JSONResponse, HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from fastapi import Body, FastAPI, Depends, HTTPException, status  # import library/framework
 from pydantic import BaseModel  # classes inherit from base model
 from datetime import date  # for default today's date insertion to date fields
+import sqlite3  # SQLite library
 from sqlalchemy.orm import Session
-#from serial import Serial
-import serial_data #Alex
 import pydanticmodels
-import sqlalchmodels  
-from dbsetup import engine, get_db
-from routers import userspathop, gardenpathop, sensorpathop
-
-
-sqlalchmodels.Base.metadata.drop_all(bind=engine) #tclears DB upon restarting main--COMMENT OUT FOR PERSISTENT DB
-sqlalchmodels.Base.metadata.create_all(bind=engine) #creates all tables according to SQLAlchemy models--
-
-#from db_filler import fill_db  #uncomment for populating DB for demo
-
-#populate table if desired (comment out if not):
-#fill_db() 
-
+import sqlalchmodels #for use with SQLAlchemy
+#from sqlalchmodels import Seed
+#from . import sqlalchmodels
+#   from sqlalchmodels import User, Seed, Plant, Supply, Base
+#from .dbsetup import engine, SessionLocal
+from dbsetup import engine, get_db #for use with SQLAlchemy
 from passlib.context import CryptContext
-pwd_context = CryptContext(schemes=["bcrypt"]) #hash algorithm type--only needed for user passowrd implementation
 
+pwd_context = CryptContext(schemes=["bcrypt"]) #hash algorithm type
+sqlalchmodels.Base.metadata.create_all(bind=engine) #creates all tables according to SQLAlchemy models
 
 app = FastAPI()  # create instance of FastAPI named 'app'
 
-templates = Jinja2Templates(directory="templates") #create template object for HTML
+#while True:  # until connected to DB   #for raw SQL
+   
+    #try:
+        #db = sqlite3.connect(database='database.db', check_same_thread=False)  # connect to local database
+        #cursor = db.cursor()  # cursor to execute SQL queries
+        #print("connection to DB successful")
+        #break
+    #except Exception as error:
+        #print("Error: ", error)
 
-app.include_router(gardenpathop.router) #router object--directs API to routes
-app.include_router(userspathop.router)
-app.include_router(sensorpathop.router)
 
 #path operations:
 # API server drills down thru request functions until it finds an HTTP request match:
@@ -41,6 +36,7 @@ app.include_router(sensorpathop.router)
 # @decorator(wrapper--extends behavior of following function (i.e. show_root))    
 # path operation/route URL (i.e. "/")   http method(i.e. GET) to endpoint
 
+#methods formatted as below are for testing HTTP queries BEFORE DB is contructed--change format, or delete once DB is in use
 @app.get("/")   
 def show_root():  # define function   ?async
     # displayed to user (gets converted to JSON) (key:value pair)
@@ -51,10 +47,17 @@ def show_root():  # define function   ?async
 def user_login():
     return {"data": "login"} 
 
+# id is a "path parameter"--always returned as a string!
+#@app.get("/seedvault/{id}")  # get individual seed type by ID
+#def get_seed(id: int):
+    #print(id)
+    #return {"data": f"Seed: {id}"}
 
-@app.get("/myclimate") #for external API calls
-def show_climatedata():
-    return
+# revive later for sensor DB (stub):
+# @app.get("/sensors")  #get list of all sensors
+# def show_sensors():
+#    return {"data": "sensors"}
+
 
 ######################################################################
 #methods formatted as below are for Python-language DB queries using SQLAlchemy library:
@@ -65,54 +68,38 @@ def show_my_plants(db: Session = Depends(get_db)): #opens DB session for queries
     return {"data": plants}
 
 
-@app.get("/seedvault") 
+@app.get("/seedvault")  #USE WITH SQLAlchemy
 def show_seeds(db: Session = Depends(get_db)):  # dependency
-    seeds = db.query(sqlalchmodels.Seed).all() 
+    seeds = db.query(sqlalchmodels.Seed).all()  # using SQLAlchemy query
     #print(seeds)  # print to terminal
     return {"data": seeds}
-    #return Body('index.html')
 
-@app.get("/wishlist") 
-def show_wishlist(db: Session = Depends(get_db)):  
-    plants = db.query(sqlalchmodels.Plant).all()  
+@app.get("/wishlist")  #USE WITH SQLAlchemy
+def show_wishlist(db: Session = Depends(get_db)):  # dependency
+    plants = db.query(sqlalchmodels.Plant).all()  # using SQLAlchemy query
     #print(seeds)  # print to terminal
     return {"data": plants}
 
 
-@app.get("/users/{id}") 
-def show_users(db: Session = Depends(get_db)): 
-    users = db.query(sqlalchmodels.User).all() 
-    return {"data": f"User: {id}"}
+@app.get("/users")  #USE WITH SQLAlchemy
+def show_users(db: Session = Depends(get_db)):  # dependency
+    users = db.query(sqlalchmodels.User).all()  # using SQLAlchemy query
+    return {"data": users}
 
 
-@app.get("/my_supplies") #original--moved to 
-def show_supplies(db: Session = Depends(get_db)):  
-    supplies = db.query(sqlalchmodels.Supply).all() 
+@app.get("/my_supplies")  #USE WITH SQLAlchemy
+def show_supplies(db: Session = Depends(get_db)):  # dependency
+    supplies = db.query(sqlalchmodels.Supply).all()  # using SQLAlchemy query
     #print(seeds)  # print to terminal
     return {"data": supplies}
 
-#@app.get("/my_sensors")
-#def show_sensors(db: Session = Depends(get_db)):
-    #sensors = db.query(sqlalchmodels.Sensor).all()
-    #return {"data": sensors}
+@app.get("/seedvault/{id}")  #USE WITH SQLAlchemy
+def get_seed(id: int, db: Session = Depends(get_db)):  # dependency
+    seed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id).first()  # using SQLAlchemy query
+    return seed
 
-#@app.get("/sensor_data")
-#def show_sensor_data(db: Session = Depends(get_db)):
-    #sensor_data = db.query(sqlalchmodels.SensorData).all()
-    #return {"data": sensor_data}
-
-
-# id is a "path parameter"--always returned as a string!
-@app.get("/seedvault/{id}") 
-def get_seed(id: int, db: Session = Depends(get_db)):  
-    seed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id).first()  # using SQLAlchemy query--stop looking when found
-    #return seed
-    print(id)
-    #return {"data": f"Seed: {id}"}
-    return {"data": seed}
-
-@app.delete("/seedvault/{id}", ) 
-def delete_seed(id: int, db: Session = Depends(get_db)):  
+@app.delete("/seedvault/{id}", )  #USE WITH SQLAlchemy
+def delete_seed(id: int, db: Session = Depends(get_db)):  # dependency
     delseed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id)  # using SQLAlchemy query
     seed = delseed.first() 
     if seed == None:
@@ -126,7 +113,7 @@ def delete_seed(id: int, db: Session = Depends(get_db)):
 def create_new_user(user: pydanticmodels.CreateUser, db: Session = Depends(get_db)):
     hashed_pw = pwd_context.hash(user.pw)
     user.pw = hashed_pw
-    new_user = sqlalchmodels.User(name=user.name, user_name=user.user_name, join_date=user.join_date, 
+    new_user = sqlalchmodels.User(uid=user.uid, name=user.name, user_name=user.user_name, join_date=user.join_date, 
     pw=user.pw, email=user.email, zipcode=user.zipcode) 
     db.add(new_user)
     db.commit()
@@ -135,28 +122,24 @@ def create_new_user(user: pydanticmodels.CreateUser, db: Session = Depends(get_d
     
 @app.post("/seedvault", status_code=status.HTTP_201_CREATED, response_model=pydanticmodels.CreateSeed)
 def create_new_seed(seed: pydanticmodels.CreateSeed, db: Session = Depends(get_db)):
-    #new_seed = sqlalchmodels.Seed(id=seed.id, seed_type=seed.seed_type, coll_loc = seed.coll_loc, 
-    #coll_date = seed.coll_date, num_coll = seed.num_coll)
-    new_seed = sqlalchmodels.Seed(seed_type=seed.seed_type, coll_loc = seed.coll_loc, #NO ID
+    new_seed = sqlalchmodels.Seed(id=seed.id, seed_type=seed.seed_type, coll_loc = seed.coll_loc, 
     coll_date = seed.coll_date, num_coll = seed.num_coll)
-    if new_seed.seed_type == None:
-        return {"Please provide a seed type"}
-    else:    
-        db.add(new_seed)
-        db.commit()
-        db.refresh(new_seed) #flush
-        return new_seed #return JSON model of newly-created seed to user
+    db.add(new_seed)
+    db.commit()
+    db.refresh(new_seed) #flush
+    return new_seed
 
-@app.put("/seedvault/{id}", response_model=pydanticmodels.EditSeed) 
-def edit_seed(id: int, db: Session = Depends(get_db)): 
+@app.put("/seedvault/{id}", response_model=pydanticmodels.EditSeed)  #USE WITH SQLAlchemy
+def edit_seed(id: int, db: Session = Depends(get_db)):  # dependency
     edseed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id) # using SQLAlchemy query
     seed = edseed.first() 
     if seed == None:
         print("no seed by that ID")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    #edseed.update({'seed_type': 'snapdragon', 'coll_loc': 'field', 'num_coll': '34'})
-    edseed.update(sqlalchmodels.Seed(seed_type=seed.seed_type, coll_loc = seed.coll_loc, #NO ID
-    coll_date = seed.coll_date, num_coll = seed.num_coll))
+    edseed.update({'seed_type': 'snapdragon', 'coll_loc': 'field', 'num_coll': '34'})
     db.commit()
     return seed
+
+
+
 

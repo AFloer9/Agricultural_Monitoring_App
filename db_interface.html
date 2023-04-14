@@ -1,0 +1,74 @@
+<!-- Alexander Flores Spring 2023 CS320-->
+<!DOCTYPE html>
+
+<html lang='en-US'>
+
+<head>
+	<title>Arduino Data</title>
+	<link rel="icon" type="image/x-icon" href="plant.png">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
+</head>
+
+<style>
+	table {
+		border-collapse: collapse;
+	}
+	 td, th {
+  		padding: 8px;
+  		border-bottom: 1px solid black;
+  		text-align: center;
+	}
+	tr:hover {
+		background-color: #dddddd;
+	}
+</style>
+
+<body>
+	<h1 style="text-align:center;"> Arduino Data</h1>
+	<hr>
+	
+	<div align="center">
+		<form action="nothing" >
+		<label for="data_display">Choose your data:</label>
+		<select name="data_display">
+			<option value="select" disabled>Select</option>
+			<option value="sensor">My Sensors</option>
+			<option value="data">Data</option>
+			<option value="Meta">Sensor Metadata</option>
+			<option value="data_recent">Most recent Data</option>
+		</select>
+
+		<input type="date" id="start_date" name="start" min="2000-01-02" required> to
+		<input type="date" id="end_date" name="end" min="2000-01-02">
+		
+			<input type="submit" name="submit">
+		</form>
+	</div>
+	<div>
+		<table style="margin-left:auto; margin-right:auto;">
+			<caption>Sensor Data</caption>
+		<tr> 
+			<th>Sensor</th>
+			<th>Data</th>
+			<th>Date</th>
+		</tr>
+		<tr>
+			<td>DHT_TEMP</td>
+			<td>68 F</td>
+			<td>4/13/2023</td>
+		</tr>
+		<tr>
+			<td>DHT_HUM</td>
+			<td>60%</td>
+			<td>4/13/2023</td>
+		</tr>
+		<tr>
+			<td>TEMP</td>
+			<td>70 F</td>
+			<td>4/13/2023</td>
+		</tr>
+		</table>
+	</div>
+</body>
+</html>
