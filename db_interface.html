@@ -29,7 +29,7 @@
 	<hr>
 	
 	<div align="center">
-		<form action="nothing" >
+		<form name="forms" onsubmit="return changeData()">
 		<label for="data_display">Choose your data:</label>
 		<select name="data_display">
 			<option value="" selected disabled hidden>Select</option>
@@ -45,6 +45,7 @@
 			<input type="submit" name="submit">
 		</form>
 	</div>
+
 	<div>
 		<table style="margin-left:auto; margin-right:auto;">
 			<caption>Sensor Data</caption>
@@ -70,5 +71,14 @@
 		</tr>
 		</table>
 	</div>
+
+	<p id="demo"></p>
+
+	<script type="module">
+		import { changeData } from "./arduinoData.js";
+		let x = "i should print";
+		document.getElementById("demo").innerHTML = x;
+	
+	</script>
 </body>
 </html>
