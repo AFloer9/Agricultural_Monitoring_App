@@ -65,16 +65,16 @@ class Sensor(Base):
 	ID = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
 	sensor_type = Column(String, nullable=False)
 
-	#def __repr__(self):
-		#return f"{self.ID} {self.sensor_type}"
+	def __repr__(self):
+		return f"{self.ID} {self.sensor_type}" #calls this object for print function
 
 class SensorRelation(Base):
 	__tablename__ = 'sensor_relation'
 	sensor_id = Column(Integer, ForeignKey('my_sensors.ID'), primary_key=True, nullable=False)
 	data_id = Column(Integer, ForeignKey('sensor_data.data_id'), primary_key=True, nullable=False)
 
-	#def __repr__(self):
-		#return f"{self.sensor_id} {self.data_id}" #calls this object for print function
+	def __repr__(self):
+		return f"{self.sensor_id} {self.data_id}" #calls this object for print function
 
 class SensorData(Base):
 	__tablename__ = 'sensor_data'

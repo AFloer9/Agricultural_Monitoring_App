@@ -16,7 +16,7 @@ from dbsetup import get_db
 from typing import Dict, Optional, List
 from requests import Request
 import requests
-import serial_data #Alex
+#import serial_data #Alex
 
 router = APIRouter()
 
