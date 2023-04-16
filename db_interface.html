@@ -1,6 +1,7 @@
 <!-- Alexander Flores Spring 2023 CS320-->
+<!-- This website was made with the help of w3schools.com-->
 <!DOCTYPE html>
-
+<link rel="stylesheet" href="style.css">
 <html lang='en-US'>
 
 <head>
@@ -10,39 +11,34 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
 </head>
 
-<style>
-	table {
-		border-collapse: collapse;
-	}
-	 td, th {
-  		padding: 8px;
-  		border-bottom: 1px solid black;
-  		text-align: center;
-	}
-	tr:hover {
-		background-color: #dddddd;
-	}
-</style>
-
 <body>
+	<div>
+		<ul>
+			<li> <a href="#"> <b>Home</b></a></li>
+			<li> <a href="#"><b>Sensors </b></a></li>
+			<li> <a href="#"><b>Climate</b></a></li>
+			<li style="float:right"> <a href="#"><b>About</b></a></li>
+		</ul>
+	</div>
+	<hr>
 	<h1 style="text-align:center;"> Arduino Data</h1>
 	<hr>
 	
 	<div align="center">
-		<form name="forms" onsubmit="return changeData()">
+		<form id="forms" >
 		<label for="data_display">Choose your data:</label>
 		<select name="data_display">
 			<option value="" selected disabled hidden>Select</option>
+			<option value="data_recent">Most recent Data</option>
 			<option value="sensor">My Sensors</option>
 			<option value="data">Data</option>
 			<option value="Meta">Sensor Metadata</option>
-			<option value="data_recent">Most recent Data</option>
 		</select>
 
 		<input type="date" id="start_date" name="start" min="2000-01-02" required> to
 		<input type="date" id="end_date" name="end" min="2000-01-02">
 		
-			<input type="submit" name="submit">
+			<input type="submit" class="test" name="submit">
 		</form>
 	</div>
 
@@ -72,13 +68,54 @@
 		</table>
 	</div>
 
-	<p id="demo"></p>
 
-	<script type="module">
-		import { changeData } from "./arduinoData.js";
-		let x = "i should print";
-		document.getElementById("demo").innerHTML = x;
-	
-	</script>
+<canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+
+
 </body>
 </html>
+
+
+<script>
+	function runPython() {
+		
+	}
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js">
+</script>
+
+<script type="text/javascript">
+
+new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: ["Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7","Day 8","Day 9","Day 10"],
+    datasets: [{ 
+    	label: 'DHT_Humidity',
+      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+      borderColor: "red",
+      fill: false
+    }, { 
+    	label: 'DHT_Temperatire',
+      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
+      borderColor: "green",
+      fill: false
+    }, { 
+    	label: 'Temperature',
+      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+      borderColor: "blue",
+      fill: false
+    }]
+  },
+  options: {
+    legend: {display: true},
+    text: "Arduino Data",
+    display:true
+  }
+});
+</script>
+
+<script src="script.js">
+</script>
