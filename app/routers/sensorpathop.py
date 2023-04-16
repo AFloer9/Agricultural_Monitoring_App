@@ -14,8 +14,8 @@ from sqlalchemy import update, JSON, func
 import sqlalchmodels  
 from dbsetup import get_db, engine
 from typing import Dict, Optional, List
-import serial_data #Alex
-from serial_data import getCurrentSensors
+#import serial_data #Alex
+#from serial_data import getCurrentSensors
 
 router = APIRouter()
 
