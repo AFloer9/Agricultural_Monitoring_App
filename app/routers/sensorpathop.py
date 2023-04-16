@@ -14,7 +14,6 @@ from sqlalchemy import update, JSON, func
 import sqlalchmodels  
 from dbsetup import get_db, engine
 from typing import Dict, Optional, List
-import requests
 import serial_data #Alex
 from serial_data import getCurrentSensors
 
@@ -42,7 +41,7 @@ def show_sensors(db: Session = Depends(get_db)):
     return seeds
     
 @router.post("/my_sensors/{sensorName}")  #ADD new sensor
-def addSensor(sensorName):
+def addSensor(sensorName):  #ALEX
 	# maybe date sensor was added...  label is like look above maybe?
 	with Session(engine) as session:
 		result = session.query(sqlalchmodels.Sensor.ID).filter(sqlalchmodels.Sensor.sensor_type == sensorName).all()
@@ -55,7 +54,7 @@ def addSensor(sensorName):
 		return result[0][0]     #return ID of sensors with this name
 
 #@router.post("/sensor_data")            #ADD sensor data to database (from Arduino)
-#def addData(data_list, sensor_dict): # to db   
+#def addData(data_list, sensor_dict): # to db   #ALEX
 	with Session(engine) as session:
 		#what if nothing
 		max_value = session.query(func.max(sqlalchmodels.SensorData.data_id)).all()    #get list of all sensor data
@@ -84,13 +83,13 @@ def addSensor(sensorName):
 #def show_sensors(db: Session = Depends(get_db)):
     #sensors = db.query(sqlalchmodels.Sensor).all()
     #return sensors
-def getCurrentSensors(sensor_list, loc):  #<<<<ALEX
+def getCurrentSensors(sensor_list, loc):  #ALEX
 	# returns dictionary of all the sensors with their ID
 	# maybe insert loc somewhere else
 	return {sensor:{'id':addSensor(sensor), 'loc':loc} for sensor in sensor_list}
     
     
-#@router.get("/my_data")  #**Arduino data* list
+#@router.get("/sensor_data")  #**Arduino data* list
 #def show_sensor_data(db: Session = Depends(get_db)):
     #sensor_data = db.query(sqlalchmodels.SensorData).all()
     #return sensor_data

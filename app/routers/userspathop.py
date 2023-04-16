@@ -29,3 +29,9 @@ def create_new_user(user: pydanticmodels.CreateUser, db: Session = Depends(get_d
 def show_user(email: str, db: Session = Depends(get_db)): 
     user = db.query(sqlalchmodels.User).filter(sqlalchmodels.User.email == email).first()
     return user
+
+@router.get("/login")
+def user_login():
+    return {"data": "login"} 
+
+
