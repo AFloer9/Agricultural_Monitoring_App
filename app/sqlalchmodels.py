@@ -54,21 +54,6 @@ class Supply(Base):  # extends class Basemodel--allows auto-validation of user i
     num_supply = Column(Integer, default="1")
     amt = Column(Integer, default="1")
     unit = Column(String(255), default="lbs")
-
-#class Sensor(Base):  #table of sensors owned by user
-#    __tablename__ = "my_sensors"
-#    id = Column(Integer, primary_key=True, nullable=False)
- #   sensor_type = Column(String, nullable=False)
-#    sensor_loc = Column(String)
-    
-    
-#class SensorData(Base):  #data from sensors#
-   # __tablename__ = "my_data"
-   # id = Column(Integer, primary_key=True, nullable=False)
-   # humidity = Column(Float)
-   # temperature = Column(Float, nullable=False)
-    #shade = Column(Float)
-    #water_level = Column(Float)
     
 #class ClimateData(Base): #weather data from APIs  ONLY NEED THIS CLASS IF STORED IN DB, else called directly
     #pred_rainfall = Column(Float)    
@@ -78,22 +63,22 @@ class Supply(Base):  # extends class Basemodel--allows auto-validation of user i
 class Sensor(Base):
 	__tablename__ = 'my_sensors'
 	ID = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-	sensor_type = Column(String(255), nullable=False)
+	sensor_type = Column(String, nullable=False)
 
-	#def __repr__(self):
-		#return f"{self.ID} {self.sensor_type}"
+	def __repr__(self):
+		return f"{self.ID} {self.sensor_type}" #calls this object for print function
 
 class SensorRelation(Base):
 	__tablename__ = 'sensor_relation'
 	sensor_id = Column(Integer, ForeignKey('my_sensors.ID'), primary_key=True, nullable=False)
 	data_id = Column(Integer, ForeignKey('sensor_data.data_id'), primary_key=True, nullable=False)
 
-	#def __repr__(self):
-		#return f"{self.sensor_id} {self.data_id}" #calls this object for print function
+	def __repr__(self):
+		return f"{self.sensor_id} {self.data_id}" #calls this object for print function
 
 class SensorData(Base):
 	__tablename__ = 'sensor_data'
 	# date
 	data_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
 	data = Column(Float)
-	sensor_loc = Column(String(255))
+	sensor_loc = Column(String)

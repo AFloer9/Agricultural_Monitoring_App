@@ -39,7 +39,6 @@ class Plant(BaseModel):
     class Config:
         orm_mode = True
 
-
 class Supply(BaseModel):  
     id: int
     supply_type: str

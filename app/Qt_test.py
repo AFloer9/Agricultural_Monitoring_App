@@ -1,5 +1,7 @@
 # Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
 
+#experiment for front-end PyQt
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLineEdit, QWidget, QFormLayout, QApplication, QPushButton, QHBoxLayout
 import sys

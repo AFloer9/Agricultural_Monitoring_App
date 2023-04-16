@@ -4,7 +4,23 @@
 <html>
     <head>
         <title>GardenMinder</title>
-        <link rel="stylesheet" href="style.css">
+        <!--link rel="stylesheet" href="style.css"--> <!--comment in for style & color-->
+        <script>
+                var message = null;
+                function ajaxCallToServer() {
+                    var responseText = document.getElementById('response');
+                    var xmlhttp = new XMLHttpRequest(); var url = "/seedvault"
+                    xmlhttp.open("GET", url, true);
+                    xmlhttp.setRequestHeader("Content-type", "application/json");
+                    xmlhttp.onload = (res) => {
+                        console.log(res['target']['response']);
+                        message = res['target']['response'];
+                        responseText.innerHTML = message;
+                
+                    };
+                    xmlhttp.send();
+                }
+        </script>
     </head>
    <h1>Welcome to GardenMinder</h1>
     <body>
@@ -17,29 +33,81 @@
             <button id="button6">my data</button>
             <button id="button7">climate</button>
         </div>
-        <p id="demo"></p>
-        <div id = "table">
-            <table id = "seeds">seed table</table>
-        </div>
         <form action="login">
             <input name="username" type="text" placeholder="gardener">
             <input name="password" type="text" placeholder="password">
             <button type="submit">submit</button>
         </form>
-        <!--action when button is clicked--follows this route (function)-->
+
+        <p id="response">response</p>
+
+        <table id = "seeds table">
+            <th>table header</th>
+            <tbody>
+            <tr>table row
+                <td>table cell</td>
+                <td>table cell</td>
+                <td>table cell</td>
+            </tr>
+            <tr>table row
+                <td>table cell</td>
+                <td>table cell</td>
+                <td>table cell</td>
+            </tr>
+            <tr>table row
+                <td>table cell</td>
+                <td>table cell</td>
+                <td>table cell</td>
+            </tr>
+        </tbody>
+        </table>
+
+        <script
+        src="https://code.jquery.com/jquery-3.6.4.js"
+        integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
+        crossorigin="anonymous"></script>
+
+<!--need for JQuery AJAX:-->
+ <!--script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script-->
+ 
+ <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script-->
+ <!--action when button is clicked--follows this route (function)-->
+ <script src="/app/routers/gardenpathop.py"></script>
+
+ <script>
+    function seedvault_clicked(){
+        $.ajax({
+            url: '/app/routers/gardenpathop/test_show_main',
+            success: function(data) {
+                console.log("Here's your seeds")
+                console.log(data)
+                $("div").data(data);
+            },
+        error: function(err) { alert(err);}
+        });   
+    }
+</script>
+
+<script>
+    function sensors_clicked(){
+        $.ajax({
+            url: name= "show_sensors", path: "/app/routers/sensorpathop.py",
         
-           <!--go to seedvault_clicked function when button clicked-->
+            success: function(data) {
+                console.log("Here's your sensors")
+                console.log(data)
+                $("div").data(data);
+            },
+        error: function(err) { alert(err);}
+        });   
+    }
+</script>
 
-        <link href="{{ url_for(name= 'test_show_main', path= '/app/routers/gardenpathop.py) }}"/>
+        <button onclick="seedvault_clicked()" >Python</button>   <!--go to seedvault function when button clicked-->
+        <script src="/app/routers/gardenpathop.py"></script>
 
-        <!--button onclick="{{ url_for(path= '/database.db') }}" >Python</button--> 
-        <!--button onclick="{{ url_for(path= 'test_show_seeds') }}" >Python</button--> 
-
-        <script defer src="gardenpathop.py"></script>
-
-        <!--<script>
-            window.data = {{data|default:"{}"|safe}}
-        </script>-->
+        <button onclick="sensors_clicked()" >sensors</button>   <!--go to seedvault function when button clicked-->
+        <script type="text/javascript" src="/app/routers/sensorpathop.py"></script>
 
 
         <!--makes main.py module accessible to front end-->
@@ -50,29 +118,33 @@
                 })
             }
         </script>
+       
+        <p id="myData"></p>  <!--connects to .js appendData fx-->
+
+        <!--button onclick="{{ url_for(path= '/database.db') }}" >Python</button--> 
+        <!--button onclick="{{ url_for(path= 'test_show_seeds') }}" >Python</button--> 
 
         {% block seedvault %}  
-            {{seed.seed_type}}
+             {{seed.seed_type}}
         {% endblock %}
 
-        <script>
-            document.getElementById("demo").innerHTML = 1500;
-        </script>
-        </body>
-    
-        <p><a href="{{ url_for(name= 'test_show_seeds', path= '/app/routers/gardenpathop.py') }}">seedvault</a></p>
-        <p><a href="/seedvault">seedvault2</a></p>    <!--link to seedvault page-->
-        <p><a href="/seedvault">seedvault3</a></p>
+    <p id="demo"></p>
+    <script>
+        document.getElementById("demo").innerHTML = "inner html demo";
+    </script>
+    </body>
+<!--"seedvault" URL LINKS on bottom of page-->
+    <p><a href="{{ url_for(name= 'test_show_main', path= '/app/routers/gardenpathop.py') }}">seedvault0</a></p>
+    <p><a href="{{ url_for(name= 'test_show_seeds', path= '/app/routers/gardenpathop.py') }}">seedvault1</a></p>
+    <p><a href="/">seedvault2</a></p>    <!--opens file directory-->
+    <p><a href="seedvault.html">seedvault3</a>  <!--opens file-->
+    <p><a href="script.js">seedvault4</a></p>    <!--opens file shows content-->
+    <link href="{{ url_for(name= 'test_show_main', path= '/app/routers/gardenpathop.py) }}">
+    <!--{{ }} add "/app/templates" to GET path-->  
+       
     </body>
     <script defer src="script.js"></script>
 </html>
 
+<script src="gardenpathop.py"></script>
 
-
-        <script>
-            function page_load(){
-                $.ajax({
-                    url: "main.py"
-                })
-            }
-        </script>
