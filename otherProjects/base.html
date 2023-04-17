@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang='en-US'>
+<head>
+
+<link rel="stylesheet" href="style2.css" />
+<script src="script2.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+	
+	
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="icon" type="image/x-icon" href="plant.png">
+	{% block scripts %}
+	{% endblock %}
+	
+	{% block title %}{% endblock %}
+</head>
+<body>
+	<div>
+		<ul>
+			<li> <a href="#"> <b>Home</b></a></li>
+			<li> <a href="#"><b>Sensors </b></a></li>
+			<li> <a href="#"><b>Climate</b></a></li>
+			<li style="float:right"> <a href="#"><b>About</b></a></li>
+		</ul>
+	</div>
+	
+	<hr>
+	{% block webpage_title %}{% endblock %}
+	<!-- <h1 style="text-align:center;"> Arduino Data</h1> -->
+	<hr>
+	
+	{% block content %}
+		{% endblock %}
+
+</body>
+</html>
