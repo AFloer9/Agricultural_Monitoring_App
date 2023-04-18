@@ -12,8 +12,9 @@ from sqlalchemy.orm import Session
 #import serial_data #Alex
 import pydanticmodels
 import sqlalchmodels  
-from dbsetup import engine, get_db
+from dbsetup import engine
 from routers import userspathop, gardenpathop, sensorpathop
+from jinja2 import Environment, FileSystemLoader
 
 
 #sqlalchmodels.Base.metadata.drop_all(bind=engine) #tclears DB upon restarting main--COMMENT OUT FOR PERSISTENT DB
@@ -43,6 +44,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount('/templates', StaticFiles(directory="templates"), name="templates")
 
 templates = Jinja2Templates(directory="templates") #create template object for HTML
 
