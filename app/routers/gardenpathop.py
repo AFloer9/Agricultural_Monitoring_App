@@ -5,6 +5,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.requests import HTTPConnection
 from pydantic import BaseModel  # classes inherit from base model
 from datetime import date  # for default today's date insertion to date fields
 from sqlalchemy.orm import Session
@@ -17,10 +18,13 @@ from typing import Dict, Optional, List
 from requests import Request
 import requests
 #import serial_data #Alex
+from jinja2 import Environment, FileSystemLoader, Template
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="templates") #create template object for HTML
+templates = Jinja2Templates(directory="./templates/") #create template object for HTML
+template = templates.get_template("index.html")
+template = templates.get_template("seedvault.html")
 
 #path operations:
 # API server drills down thru request functions until it finds an HTTP request match:
@@ -36,10 +40,10 @@ templates = Jinja2Templates(directory="templates") #create template object for H
 
 #**if paths are identical, first route will be taken**
 
-@router.get("/")   
-def show_root():  
+#@router.get("/")   
+#def show_root():  
     # displayed to user: (gets converted to JSON) (key:value pair)
-    return {"Welcome to the Agricultural Monitoring Project"}
+    #return {"Welcome to the Agricultural Monitoring Project"}
     #shows on webpage at path address
     
  #FOR HTML/JS
@@ -48,24 +52,25 @@ def show_main(request = Request, db: Session = Depends(get_db)):
    return templates.TemplateResponse("index.html", {'request': request})
 
  #FOR HTML/JS
-@router.get("/seedvault")
-#@router.get("/seedvault", response_class=JSONResponse)  #TEST for jinja template
+#@router.get("/seedvault")
+@router.get("/seedvault", response_class=HTMLResponse)  #TEST for jinja template
 #@router.get("/seedvault", response_model=List[pydanticmodels.Seed]) 
-def test_show_main(request: Request , db: Session = Depends(get_db)):  # dependency
-    #seeds = db.query(sqlalchmodels.Seed).all() 
-    seeds = ("daisy")
+def test_show_main(request: HTTPConnection, db: Session = Depends(get_db)):  # dependency
+    seeds = db.query(sqlalchmodels.Seed).all() 
+    #seeds = ("daisy")
     print(seeds)
     print(request)
-    return seeds
-    #return templates.TemplateResponse("seedvault.html", {'request': request, 'seeds':seeds} )
+    #return seeds
+    return templates.TemplateResponse("index.html", {"request": request, "seeds": seeds})
+    #return (seeds)
    
 #FOR HTML/JS  
-@router.get("/seedvault/", response_class=HTMLResponse)  #TEST for jinja template
+@router.get("/seedvault", response_class=HTMLResponse)  #TEST for jinja template
 #@router.get("/seedvault", response_model=List[pydanticmodels.Seed]) 
-def test_show_seeds(request = Request, db: Session = Depends(get_db)):  # dependency
+def test_show_seeds(request: HTTPConnection, db: Session = Depends(get_db)):  # dependency
     seeds = db.query(sqlalchmodels.Seed).all() 
     #return templates.TemplateResponse("seedvault.html", {'request': request} )
-    return templates.TemplateResponse('templates/index.html', {"request": request})
+    return templates.TemplateResponse('index.html', {"request": request, "seeds": seeds})
 
 
 @router.get("/seedvault")  #get inventory of all seeds collected         db version--HTTP--no front end

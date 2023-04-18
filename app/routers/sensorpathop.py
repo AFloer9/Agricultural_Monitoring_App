@@ -10,19 +10,22 @@ from datetime import date  # for default today's date insertion to date fields
 from sqlalchemy.orm import Session
 from sqlalchemy.types import SchemaType, PickleType
 from sqlalchemy import update, JSON, func
-#import pydanticmodels
+import pydanticmodels
 import sqlalchmodels  
 from dbsetup import get_db, engine
 from typing import Dict, Optional, List
-#import serial_data #Alex
-#from serial_data import getCurrentSensors
+import serial
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates") #create template object for HTML
 
+@router.get("/")
+def show_sensor_data(request: Request):
+    return templates.TemplateResponse("Index.html", {"request": request})
+
 @router.get("/sensor_data")  #**Arduino data* list
-def show_sensor_data():
+def show_sensor_data2():
 	with Session(engine) as session:
 		stmt = session.query(sqlalchmodels.SensorData).all()
 		return stmt
@@ -36,9 +39,9 @@ def show_sensor_data():
 	print(sensor_data)
     
 @router.get("/my_sensors")  #LIST of all sensors
-def show_sensors(db: Session = Depends(get_db)):
-    seeds = db.query(sqlalchmodels.Sensor).all() 
-    return seeds
+def show_sensors(request: Request, db: Session = Depends(get_db)):
+    sensors = db.query(sqlalchmodels.Sensor).all() 
+    return templates.TemplateResponse("Index.html", {"request": request, "sensors": sensors})
     
 @router.post("/my_sensors/{sensorName}")  #ADD new sensor
 def addSensor(sensorName):  #ALEX
