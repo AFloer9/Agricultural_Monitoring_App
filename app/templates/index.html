@@ -5,26 +5,21 @@
     <head>
         <title>GardenMinder</title>
         <!--link rel="stylesheet" href="style.css"--> <!--comment in for style & color-->
-        <script>
-                var message = null;
-                function ajaxCallToServer() {
-                    var responseText = document.getElementById('response');
-                    var xmlhttp = new XMLHttpRequest(); var url = "/seedvault"
-                    xmlhttp.open("GET", url, true);
-                    xmlhttp.setRequestHeader("Content-type", "application/json");
-                    xmlhttp.onload = (res) => {
-                        console.log(res['target']['response']);
-                        message = res['target']['response'];
-                        responseText.innerHTML = message;
-                
-                    };
-                    xmlhttp.send();
-                }
-        </script>
+        <link href="{{ url_for('templates', path='seedvault.html') }}">
+
+    <!--need for JQuery AJAX:-->
+    <script
+    src="https://code.jquery.com/jquery-3.6.4.js"
+    integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
+    crossorigin="anonymous"></script>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
     </head>
    <h1>Welcome to GardenMinder</h1>
     <body>
         <div id = "options">
+            <!--when clicked, these buttons call from script.js-->
             <button id="button1">account</button>
             <button id="button2">seedvault</button>
             <button id="button3">plants</button>
@@ -49,102 +44,162 @@
                 <td>table cell</td>
                 <td>table cell</td>
             </tr>
-            <tr>table row
-                <td>table cell</td>
-                <td>table cell</td>
-                <td>table cell</td>
-            </tr>
-            <tr>table row
-                <td>table cell</td>
-                <td>table cell</td>
-                <td>table cell</td>
-            </tr>
         </tbody>
         </table>
 
-        <script
-        src="https://code.jquery.com/jquery-3.6.4.js"
-        integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
-        crossorigin="anonymous"></script>
+        <p id="myData"></p>  <!--connects to .js appendData fx-->
 
-<!--need for JQuery AJAX:-->
- <!--script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script-->
- 
- <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script-->
- <!--action when button is clicked--follows this route (function)-->
- <script src="/app/routers/gardenpathop.py"></script>
+        <p  href="#0" id="div"></p>  <!--for button click returned data-->
+
+        <p href="#0" id="seed_type"></p>
+        <p href="#0" id="coll_loc"></p>
+        <p href="#0" id="coll_date"></p>
+        <p href="#0" id="num_coll"></p>
+
 
  <script>
+    src="/app/routers/gardenpathop.py"
     function seedvault_clicked(){
         $.ajax({
-            url: '/app/routers/gardenpathop/test_show_main',
+            url: "/seedvault/marigold",
+            type: "get",
+            dataType: "json",
+            timeout: 5000,
             success: function(data) {
                 console.log("Here's your seeds")
                 console.log(data)
-                $("div").data(data);
+                alert(data)
+                $("#div").text(data);
+                seed_type =$("#seed_type").val();
+                coll_loc =$("#coll_loc").val();
+                coll_date = $("#coll_date").val();
+                num_coll = $("#num_coll").val();
             },
-        error: function(err) { alert(err);}
+        error: function(err) { console.log(err);}
         });   
     }
 </script>
 
+<!--add seed button-->
 <script>
+    src="/app/routers/gardenpathop.py"
+    function add_seed_clicked(){
+
+        var seed_type;
+        var coll_loc;
+        var coll_date;
+        var num_coll;
+
+        $.ajax({
+            url: "/seedvault/marigold",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({
+                    "seed_type": "marigold",
+                    "coll_loc": "back yard",
+                     "coll_date": "2023-1-1",
+                     "num_coll": "2"
+            }),
+
+            success: function() {
+                console.log("seed added")
+                alert("seed added")
+                seed_type =$("#seed_type").val();
+                coll_loc =$("#coll_loc").val();
+                coll_date = $("#coll_date").val();
+                num_coll = $("#num_coll").val();
+            },
+        error: function(err) { console.log(err);}
+        });   
+    }
+</script>
+
+<!--sensors button-->
+<script>
+    src="/app/routers/sensorpathop.py"
     function sensors_clicked(){
         $.ajax({
-            url: name= "show_sensors", path: "/app/routers/sensorpathop.py",
-        
+            url: "/my_sensors/moisture",
+            crossDomain: true,
+            type: "get",
+            dataType: "json",
+            contentType: "application/json",
             success: function(data) {
-                console.log("Here's your sensors")
+                console.log("sensor data")
                 console.log(data)
-                $("div").data(data);
+                $.each(data, function(i, sensor){
+                    $("#div").append(sensor + " ");
+                })
+            },
+        error: function(err) { console.log(err);}
+        });   
+    }
+</script>
+
+<!--main button-->
+<script>
+    function main_clicked(){
+        $.ajax({
+            url: "/",
+            crossDomain: true,
+            type: "get",
+            dataType: "json",
+            contentType: "application/json",
+            success: function(data) {
+                console.log("main page")
+                console.log(data)
+                $("#div").data(data);
             },
         error: function(err) { alert(err);}
         });   
     }
 </script>
 
-        <button onclick="seedvault_clicked()" >Python</button>   <!--go to seedvault function when button clicked-->
-        <script src="/app/routers/gardenpathop.py"></script>
+<!--plants button-->
+<script>
+    src="/app/routers/gardenpathop.py"
+    $('#button3').click(function(){
+        $.ajax({
+            type: "get",
+            url: "/seedvault/marigold/", 
+            crossDomain: true,
+            dataType: "json",
+            contentType: "application/json",
+            success: function(data) {
+                console.log(data)
+                alert("function run")
+                $("#div").append(data);
+                seed_type =$("#seed_type").val();
+                coll_loc =$("#coll_loc").val();
+                coll_date = $("#coll_date").val();
+                num_coll = $("#num_coll").val();
+        },   
+        })
+    })
+</script>
 
-        <button onclick="sensors_clicked()" >sensors</button>   <!--go to seedvault function when button clicked-->
-        <script type="text/javascript" src="/app/routers/sensorpathop.py"></script>
+        <button onclick="seedvault_clicked()">seedvault</button>   <!--go to seedvault function when button clicked-->
 
+        <button onclick="main_clicked()">main</button>   <!--go to seedvault function when button clicked-->
 
-        <!--makes main.py module accessible to front end-->
-        <script>
-            function page_load(){
-                $.ajax({
-                    url: "main.py"
-                })
-            }
-        </script>
+        <button onclick="sensors_clicked()">sensors</button>   <!--go to seedvault function when button clicked-->
        
-        <p id="myData"></p>  <!--connects to .js appendData fx-->
+        <button onclick="ajaxCallToServer()">XMLHttpRequest</button>   <!--go to seedvault function when button clicked-->
+      
+        <button onclick="add_seed_clicked()">add seed</button>   <!--go to seedvault function when button clicked-->
+   
 
-        <!--button onclick="{{ url_for(path= '/database.db') }}" >Python</button--> 
-        <!--button onclick="{{ url_for(path= 'test_show_seeds') }}" >Python</button--> 
-
-        {% block seedvault %}  
-             {{seed.seed_type}}
-        {% endblock %}
-
-    <p id="demo"></p>
-    <script>
-        document.getElementById("demo").innerHTML = "inner html demo";
-    </script>
-    </body>
 <!--"seedvault" URL LINKS on bottom of page-->
-    <p><a href="{{ url_for(name= 'test_show_main', path= '/app/routers/gardenpathop.py') }}">seedvault0</a></p>
-    <p><a href="{{ url_for(name= 'test_show_seeds', path= '/app/routers/gardenpathop.py') }}">seedvault1</a></p>
-    <p><a href="/">seedvault2</a></p>    <!--opens file directory-->
-    <p><a href="seedvault.html">seedvault3</a>  <!--opens file-->
+    <p><a href="/">seedvault2</a></p>    <!--opens file my directory-->
+    <p><a href="seedvault.html">seedvault3</a>  <!--opens file show content like a hyperlink-->
     <p><a href="script.js">seedvault4</a></p>    <!--opens file shows content-->
-    <link href="{{ url_for(name= 'test_show_main', path= '/app/routers/gardenpathop.py) }}">
-    <!--{{ }} add "/app/templates" to GET path-->  
-       
+
+    <script src="seedvault.html"></script>
+
     </body>
     <script defer src="script.js"></script>
 </html>
 
-<script src="gardenpathop.py"></script>
+
 

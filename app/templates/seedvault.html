@@ -1,6 +1,8 @@
+
 {% extends "index.html" %}   <!--Jinja notation-->
 {% block seedvault %}
-    <a href="{{ url_for(name= 'test_show_main', path= '/app/routers/gardenpathop.py') }}"></a>      <!--link to seedvault page-->
+    {{seed.seed_type}}   
+
     
 
 {% endblock %}
