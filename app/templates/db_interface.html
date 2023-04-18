@@ -1,14 +1,15 @@
 <!-- Alexander Flores Spring 2023 CS320-->
 <!-- This website was made with the help of w3schools.com-->
 <!DOCTYPE html>
-<link rel="stylesheet" href="style2.css">
+<link rel="stylesheet" href="{{ url_for('templates', path='style2.css') }}">
 <html lang='en-US'>
 
 <head>
 	<title>Arduino Data</title>
-	<link rel="icon" type="image/x-icon" href="plant.png">
+	<link rel="icon" type="image/x-icon" href="{{ url_for('templates', path='plant.png') }}">
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -25,18 +26,18 @@
 	<hr>
 	
 	<div align="center">
-		<form id="forms" >
-		<label for="data_display">Choose your data:</label>
-		<select name="data_display">
-			<option value="" selected disabled hidden>Select</option>
-			<option value="data_recent">Most recent Data</option>
-			<option value="sensor">My Sensors</option>
-			<option value="data">Data</option>
-			<option value="Meta">Sensor Metadata</option>
-		</select>
+		<form id="forms" action="" onsubmit="changeData(event)">
+			<label for="data_display">Choose your data:</label>
+			<select name="data_display">
+				<option value="" selected disabled hidden>Select</option>
+				<option value="data_recent">Most recent Data</option>
+				<option value="sensor">My Sensors</option>
+				<option value="data">Data</option>
+				<option value="Meta">Sensor Metadata</option>
+			</select>
 
-		<input type="date" id="start_date" name="start" min="2000-01-02" required> to
-		<input type="date" id="end_date" name="end" min="2000-01-02">
+			<input type="date" id="start_date" name="start" min="2000-01-02" required> to
+			<input type="date" id="end_date" name="end" min="2000-01-02">
 		
 			<input type="submit" class="test" name="submit">
 		</form>
@@ -68,20 +69,9 @@
 		</table>
 	</div>
 
-
 <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
-
-
 </body>
 </html>
-
-
-<script>
-	function runPython() {
-		
-	}
-</script>
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js">
 </script>
@@ -117,5 +107,24 @@ new Chart("myChart", {
 });
 </script>
 
-<script src="script2.js">
+<script>
+	var ws = new WebSocket("ws://localhost:8000/ws");
+	ws.onmessage = function(event) {
+		const data = JSON.parse(event.data);
+		console.log(data);
+	}
+function changeData(event) {
+	let x = document.forms.namedItem("forms");
+	let y = "";
+	for (let i = 0; i < 4; i++) {
+	 	y += x[i].value + " ";
+	}
+
+
+	ws.send(y);
+	event.preventDefault();
+	// alert(y);
+	// return false;
+
+}
 </script>

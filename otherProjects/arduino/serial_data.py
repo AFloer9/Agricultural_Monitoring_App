@@ -12,14 +12,14 @@ from sqlalchemy import select, func
 #from pydantic import BaseModel
 
 
-sqlalchmodels.Base.metadata.drop_all(bind=engine)
+#sqlalchmodels.Base.metadata.drop_all(bind=engine)
 sqlalchmodels.Base.metadata.create_all(bind=engine)
 
 
 def insert_test_data():
 	with Session(engine) as session:
 		demo_sensorData = sqlalchmodels.SensorData(
-			date = datetime.now(),
+			#date = datetime.now(),
 			data = 1.0,
 			sensor_loc = 'vancouver'
 			)
@@ -37,7 +37,7 @@ def insert_test_data():
 		session.add_all([demo_sensorData, demo_sensorRelation, demo_sensor])
 		session.commit()
 
-insert_test_data()
+#insert_test_data()
 
 
 def addSensor(sensorName):
@@ -138,21 +138,20 @@ loc = 'backyard'
 
 def show_sensor_data():
 	with Session(engine) as session:
-		stmt = session.query(sqlalchmodels.Sensor).all()
+		# stmt = session.query(sqlalchmodels.Sensor).all()
 		
-		for row in stmt:
-			print(row)
-		print('')
-		stmt = session.query(sqlalchmodels.SensorData.date, sqlalchmodels.SensorData.data_id, sqlalchmodels.SensorData.data, sqlalchmodels.SensorData.sensor_loc).all()
-		for row in stmt:
-			print(row)
-		stmt = session.query( sqlalchmodels.Sensor.ID).all()
-		for row in stmt:
-			print(row)
+		# for row in stmt:
+		# 	print(row)
+		# print('')
+		#stmt = session.query(sqlalchmodels.SensorData.date, sqlalchmodels.SensorData.data, sqlalchmodels.SensorData.sensor_loc).all()
+		stmt = session.query(sqlalchmodels.SensorData.data, sqlalchmodels.SensorData.sensor_loc).all()
+		return stmt
+		# for row in stmt:
+		# 	print(row)
 	#sensor_data = db.query(sqlalchmodels.SensorData).all()
 	#print(sensor_data)
 
-show_sensor_data()
+#show_sensor_data()
 
 # i = 0
 # #sleep(3)
