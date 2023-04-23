@@ -28,6 +28,7 @@ li a {
 li {
 	float: left;
 }
-div {
-	padding: 5px 5px;
+
+.data_table {
+	overflow: auto;
 }

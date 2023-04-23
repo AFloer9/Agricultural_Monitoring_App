@@ -33,7 +33,7 @@
 				<option value="data_recent">Most recent Data</option>
 				<option value="sensor">My Sensors</option>
 				<option value="data">Data</option>
-				<option value="Meta">Sensor Metadata</option>
+				<!-- <option value="Meta">Sensor Metadata</option> -->
 			</select>
 
 			<input type="date" id="start_date" name="start" min="2000-01-02" required> to
@@ -43,42 +43,76 @@
 		</form>
 	</div>
 
-	<div>
-		<table style="margin-left:auto; margin-right:auto;">
-			<caption>Sensor Data</caption>
-		<tr> 
-			<th>Sensor</th>
-			<th>Data</th>
-			<th>Date</th>
-		</tr>
-		<tr>
-			<td>DHT_TEMP</td>
-			<td>68 F</td>
-			<td>4/13/2023</td>
-		</tr>
-		<tr>
-			<td>DHT_HUM</td>
-			<td>60%</td>
-			<td>4/13/2023</td>
-		</tr>
-		<tr>
-			<td>TEMP</td>
-			<td>70 F</td>
-			<td>4/13/2023</td>
-		</tr>
-		</table>
-	</div>
+	<div class="data_table" style='height:500px; width:350px;margin-left: auto; margin-right: auto; overflow: scroll;'>
+		</div>
 
-<canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+<canvas id="myChart" style="width:100%; max-width:600px; margin-left: auto; margin-right: auto; display: none;"></canvas>
 </body>
 </html>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js">
 </script>
 
-<script type="text/javascript">
 
-new Chart("myChart", {
+
+<script>
+	var ws = new WebSocket("ws://localhost:8000/ws");
+	ws.onmessage = function(event) {
+		const data = JSON.parse(event.data);
+
+		let form = document.forms.namedItem("forms")[0].value;
+		let display = "block";
+
+		let new_width;
+		if (form == "sensor") {
+			display = "none"
+			 new_width = 200;
+		} else if (form == "data") {
+			makeGraph();
+			new_width = 350;
+		} else {
+			new_width = 500;
+		}
+		document.getElementsByClassName('data_table')[0].style.width = new_width;
+		var canvas = document.querySelector("canvas");
+		canvas.style.display = display;
+
+		// i need to add units
+		let str = "<table><tr>";
+		for (attribute in data[0]) { /* Insert attribute name of each column */
+			str += "<th>" + attribute + "</th>";
+		}
+		str += "</tr>";
+		
+		for (row in data) { /* Insert each tuple into the table */
+			str +=  "<tr>";
+			for (attribute in data[row]) {
+				str += "<td>" + data[row][attribute] + "</td>";
+			}
+			str +=  "</tr>";
+		}
+		str += "</table>";
+
+		document.getElementsByClassName("data_table")[0].innerHTML = str;
+				
+	}
+
+
+function changeData(event) {
+	let x = document.forms.namedItem("forms");
+	let y = "";
+	for (let i = 0; i < 3; i++) {
+	 	y += x[i].value + " ";
+	}
+
+	ws.send(y);
+	event.preventDefault();
+	return false;
+}
+
+
+function makeGraph() {
+	new Chart("myChart", {
   type: "line",
   data: {
     labels: ["Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7","Day 8","Day 9","Day 10"],
@@ -105,26 +139,17 @@ new Chart("myChart", {
     display:true
   }
 });
-</script>
-
-<script>
-	var ws = new WebSocket("ws://localhost:8000/ws");
-	ws.onmessage = function(event) {
-		const data = JSON.parse(event.data);
-		console.log(data);
-	}
-function changeData(event) {
-	let x = document.forms.namedItem("forms");
-	let y = "";
-	for (let i = 0; i < 4; i++) {
-	 	y += x[i].value + " ";
-	}
-
-
-	ws.send(y);
-	event.preventDefault();
-	// alert(y);
-	// return false;
 
 }
+
+//<th>Sensor Name </th><th>Data</th><th>Location</th><th>Date</th></tr>";
+
+// str +=  "<tr><td>" + data[i]['name'] 	 + "</td>" +
+			// 						"<td>" + data[i]['data'] + "</td>" +
+			// 						"<td>" + data[i]['loc']  + "</td>" +
+			// 						"<td>" + data[i]['date'] + "</td></tr>";
 </script>
+
+
+
+

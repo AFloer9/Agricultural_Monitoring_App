@@ -26,3 +26,6 @@ class SensorData(Base):
 	data_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
 	data = Column(Float)
 	sensor_loc = Column(String)
+
+	def __repr__(self):
+		return f"{self.data_id} {self.data} {self.sensor_loc} {self.date}"

@@ -1,7 +1,7 @@
 # Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
 
 #ORM models--define database table attributes
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Sequence, Date, JSON
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Sequence, Date, JSON, DateTime
 #from datetime import date  # for default today's date insertion to date fields
 from sqlalchemy.sql.sqltypes import DATE
 from sqlalchemy.sql.expression import text
@@ -78,7 +78,7 @@ class SensorRelation(Base):
 
 class SensorData(Base):
 	__tablename__ = 'sensor_data'
-	# date
+	date = Column(DateTime)
 	data_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
 	data = Column(Float)
 	sensor_loc = Column(String)

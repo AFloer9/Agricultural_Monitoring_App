@@ -17,9 +17,9 @@ from dbsetup import engine, get_db
 from routers import sensorpathop2
 
 import json
-import sys
-sys.path.append("../otherProjects/arduino")
-from serial_data import show_sensor_data
+#import sys
+#sys.path.append("../otherProjects/arduino")
+from db_serial_arduino import show_sensor_data, show_sensors
 
 
 
@@ -63,12 +63,21 @@ async def websocket_getDbData(websocket: WebSocket):
     await websocket.accept()
     while True:
         data = await websocket.receive_text()
-        #print(data.split())
-        if data:
-            t = show_sensor_data()
-            #print(len(t));
+        data = data.split()
+
+        if data[0] == 'sensor':
             data = []
-            for i in t:
-                data.append({'name':i[0], 'loc':i[1]})
-            data = json.dumps(data)
+            temp = show_sensors()
+            for i in temp:
+                data.append({'Sensor Name': i[0], 'Sensor Id': i[1]})
+        elif data[0] == 'data':
+            temp = show_sensor_data()
+            data = []
+            flag = True
+            for i in temp:
+                if flag:
+                    flag = False
+                    continue
+                data.append({'Sensor Name': i[0], 'Data': i[1], 'Location': i[2], 'Date': i[3]})
+        data = json.dumps(data)
         await websocket.send_text(data)
