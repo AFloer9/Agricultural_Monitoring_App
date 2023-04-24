@@ -1,11 +1,11 @@
 
 <!DOCTYPE html>
-<link rel="stylesheet" href="style2.css">
+<link rel="stylesheet" href="{{ url_for('templates', path='style2.css') }}">
 <html lang='en-US'>
 
 <head>
 	<title>Climate</title>
-	<link rel="icon" type="image/x-icon" href="plant.png">
+	<link rel="icon" type="image/x-icon" href="{{ url_for('templates', path='plant.png') }}">
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,9 +38,9 @@
 <body>
 	<div>
 		<ul>
-			<li> <a href="#"> <b>Home</b></a></li>
-			<li> <a href="#"><b>Sensors </b></a></li>
-			<li> <a href="#"><b>Climate</b></a></li>
+			<li> <a href="/"> <b>Home</b></a></li>
+			<li> <a href="/sensors"><b>Sensors </b></a></li>
+			<li> <a href="/climate"><b>Climate</b></a></li>
 			<li style="float:right"> <a href="#"><b>About</b></a></li>
 		</ul>
 	</div>
