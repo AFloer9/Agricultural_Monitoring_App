@@ -23,4 +23,12 @@ templates = Jinja2Templates(directory="templates") #create template object for H
 
 @router.get("/")  #**Arduino data* list
 def show_sensor_data(request: Request):
+	return "Welcome! :>)"
+
+@router.get("/sensors")  #**Arduino data* list
+def show_sensor_data(request: Request):
 	return templates.TemplateResponse("db_interface.html", {"request": request})
+
+@router.get("/climate")  #**Arduino data* list
+def show_sensor_data(request: Request):
+	return templates.TemplateResponse("json_data.html", {"request": request})
