@@ -5,9 +5,18 @@
     <head>
         <title>GardenMinder</title>
         <!--link rel="stylesheet" href="style.css"--> <!--comment in for style & color-->
-        <link href="{{ url_for('templates', path='seedvault.html') }}">
+      
+        <style>
+            table, th, td {
+                border: 1px solid black; border-collapse: collapse;  
+            }
+            td, th {padding: 10px;}
+        </style>
+    <link rel="preconnect" href="http://127.0.0.1:8000/templates">
 
-    <!--need for JQuery AJAX:-->
+  
+
+    <!--need following sources for JQuery AJAX:-->
     <script
     src="https://code.jquery.com/jquery-3.6.4.js"
     integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
@@ -16,18 +25,20 @@
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     </head>
+
    <h1>Welcome to GardenMinder</h1>
     <body>
         <div id = "options">
-            <!--when clicked, these buttons call from script.js-->
+            <!--TOP ROW BUTTONS some call from script.js-->
             <button id="button1">account</button>
             <button id="button2">seedvault</button>
             <button id="button3">plants</button>
             <button id="button4">wishlist</button>
             <button id="button5">sensors</button>
             <button id="button6">my data</button>
-            <button id="button7">climate</button>
+
         </div>
+        <!--login form (endpoint not set up)-->
         <form action="login">
             <input name="username" type="text" placeholder="gardener">
             <input name="password" type="text" placeholder="password">
@@ -37,53 +48,113 @@
         <p id="response">response</p>
 
         <table id = "seeds table">
-            <th>table header</th>
+            <!--SEED DISPLAY TABLE--called by seedvault_clicked--NEEDS ITERATION-->
+            <th>SEED TYPE </th><th>COLLECTION DATE </th><th>COLLECTION LOCATION </th><th># COLLECTED </th>
             <tbody>
-            <tr>table row
-                <td>table cell</td>
-                <td>table cell</td>
-                <td>table cell</td>
+            <tr>
+                <td><p id="seed_type" ></p></td><td><p id="coll_date"></p></td><td><p id="coll_loc"></p></td><td><p id="num_coll"></p></td>
+            </tr>
+            <tr>
+                <td><p id="seed_type" ></p></td><td><p id="coll_date"></p></td><td><p id="coll_loc"></p></td><td><p id="num_coll"></p></td>
             </tr>
         </tbody>
         </table>
 
-        <p id="myData"></p>  <!--connects to .js appendData fx-->
+        <div id="area">area</div>  <!--for button click returned data-->
+
+        <table id = "sensortable">
+            <th>SENSORS</th>
+                <tbody>
+                 <tr>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p id="data"></p>  <!--connects to .js appendData function-->
 
         <p  href="#0" id="div"></p>  <!--for button click returned data-->
 
+
+       <!--seedvault display -->
         <p href="#0" id="seed_type"></p>
         <p href="#0" id="coll_loc"></p>
         <p href="#0" id="coll_date"></p>
         <p href="#0" id="num_coll"></p>
 
+        <!--sensor list inline display-->
+        <div class="divTable">
+            <div class="divTableBody">
+                <div class="divTableHeader">SENSORS:</div>
+                    <div class="divTableRow">
+                        <div class="divTableCell"><p href="#0" id="sensor_type"></p></div> 
+                        <div class="divTableCell"><p href="#1" id="sensor_type"></p></div>
+                        <div class="divTableCell"><p href="#2" id="sensor_type"></p></div>
+                    </div>
+                </div>
+            </div>
 
+            <!--ADD SEED FORM-->
+        <form id="add seed from" action="/seedvault" method = "post">
+            <input name="seed_type" id="seed_type" type="text" placeholder="seed type" required>
+            <input name="coll_date" id="coll_date" type="text" placeholder="collected YYYY-MM-DD">
+            <input name="coll_loc" id="coll_loc" type="text" placeholder="location">
+            <input name="num_coll" id="num_coll" type="text" placeholder="# seeds">
+            <button type="submit">add seed</button>
+        </form>
+
+    <!--FUNCTIONS-->        
+    <script src="/templates"></script>
+    <!--main button-->
+    <script>
+        function main(){
+            $.ajax({
+                url: "/",
+                crossDomain: true,
+                type: "get",
+                dataType: "json",
+                contentType: "application/json",
+                success: function(data) {
+                    console.log("main page")
+                    console.log(data)
+                    $("#div").text(data);
+                },
+            error: function(err) { alert(err);}
+            });   
+        }
+    </script>
+
+    <script>main</script>
+
+<!--GET list/table of all seeds of a certain type (button)--displays in table-->
  <script>
     src="/app/routers/gardenpathop.py"
-    function seedvault_clicked(){
+    function seedtype_clicked(){
+       
         $.ajax({
             url: "/seedvault/marigold",
             type: "get",
             dataType: "json",
-            timeout: 5000,
             success: function(data) {
                 console.log("Here's your seeds")
                 console.log(data)
                 alert(data)
-                $("#div").text(data);
-                seed_type =$("#seed_type").val();
-                coll_loc =$("#coll_loc").val();
-                coll_date = $("#coll_date").val();
-                num_coll = $("#num_coll").val();
+                for (let i = 0; i<data.length; i++){ 
+                    $("#seed_type").append(data[i].seed_type)
+                    $("#coll_date").append(data[i].coll_date) 
+                    $("#coll_loc").append(data[i].coll_loc)
+                    $("#num_coll").append(data[i].num_coll)
+                }
             },
         error: function(err) { console.log(err);}
         });   
     }
 </script>
 
-<!--add seed button-->
+<!--POST add new seed (form)-->
 <script>
     src="/app/routers/gardenpathop.py"
-    function add_seed_clicked(){
+    function add_seed(){
 
         var seed_type;
         var coll_loc;
@@ -91,16 +162,16 @@
         var num_coll;
 
         $.ajax({
-            url: "/seedvault/marigold",
+            url: "/seedvault/",
             type: "post",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify({
-                    "seed_type": "marigold",
-                    "coll_loc": "back yard",
-                     "coll_date": "2023-1-1",
-                     "num_coll": "2"
-            }),
+           
+            contentType: "application/x-www-form-urlencoded",
+            Body: {
+                "seed_type": seed_type,
+                "coll_loc": coll_loc,
+                 "coll_date": coll_date,
+                 "num_coll": num_coll
+             },
 
             success: function() {
                 console.log("seed added")
@@ -115,61 +186,90 @@
     }
 </script>
 
-<!--sensors button-->
+<!--GET one line list of sensors (button)-->
 <script>
     src="/app/routers/sensorpathop.py"
     function sensors_clicked(){
         $.ajax({
-            url: "/my_sensors/moisture",
-            crossDomain: true,
+            url: "/my_sensors/",
             type: "get",
             dataType: "json",
-            contentType: "application/json",
             success: function(data) {
-                console.log("sensor data")
-                console.log(data)
-                $.each(data, function(i, sensor){
-                    $("#div").append(sensor + " ");
-                })
+                console.log("my sensors")
+                console.log(data)    
+                alert(data)  
+                for (let i = 0; i < data.length; i++){ 
+                    $("#sensor_type").append(data[i].sensor_type)
+                }
+              
             },
         error: function(err) { console.log(err);}
         });   
     }
 </script>
 
-<!--main button-->
+<!--GET sensor table button--dynamically creates and fills table in function-->
 <script>
-    function main_clicked(){
+    
+    src="/app/routers/sensorpathops.py"
+
+    function s_clicked(){
+        
         $.ajax({
-            url: "/",
+            url: "/my_sensors",
             crossDomain: true,
             type: "get",
             dataType: "json",
             contentType: "application/json",
             success: function(data) {
-                console.log("main page")
+                console.log("sensor table")
                 console.log(data)
-                $("#div").data(data);
+                let area = $("#area");
+                let sensortable = $("<table>")
+                let column = Object.keys(data[0]);
+               
+                let tablerow = $("<tr>")
+                $.each(column, function(i, column) {
+                    let tableheader = $("<th>");
+                    tableheader.text(data);
+                    tablerow.append(tablerow);             
+                });
+                $.each(data, function(i, attrib){
+                    let tablerow = $("<tr>");
+                        let datavalues = Object.values(data[0]);
+                        $.each(datavalues, (i, datavalues) => {
+                            let tabledata = $("<td>");
+                            tabledata.text(attrib);
+                            tablerow.append(tabledata);
+                        })
+                        sensortable.append(tablerow);
+                })
+                        
             },
         error: function(err) { alert(err);}
         });   
     }
 </script>
 
-<!--plants button-->
+<!--GET plants button--also finds seeds of type marigold-->
 <script>
     src="/app/routers/gardenpathop.py"
     $('#button3').click(function(){
         $.ajax({
             type: "get",
-            url: "/seedvault/marigold/", 
-            crossDomain: true,
+            url: "/seedvault/", 
             dataType: "json",
             contentType: "application/json",
             success: function(data) {
                 console.log(data)
                 alert("function run")
                 $("#div").append(data);
+
+                var table = '<table>';
+                $.each(data, function(key, value){
+                    table += '<tr><td>'+key+':'+value+'</td></tr>';
+                })
+
                 seed_type =$("#seed_type").val();
                 coll_loc =$("#coll_loc").val();
                 coll_date = $("#coll_date").val();
@@ -178,25 +278,30 @@
         })
     })
 </script>
+<!--attach functions to buttons-->
+        <button onclick="seedtype_clicked()">seed by type</button>   <!--go to seedvault function when button clicked-->
 
-        <button onclick="seedvault_clicked()">seedvault</button>   <!--go to seedvault function when button clicked-->
+        <button onclick="s_clicked()">sensor table</button>   <!--display sensor in table when button clicked-->
 
-        <button onclick="main_clicked()">main</button>   <!--go to seedvault function when button clicked-->
-
-        <button onclick="sensors_clicked()">sensors</button>   <!--go to seedvault function when button clicked-->
+        <button onclick="sensors_clicked()">sensors</button>   <!--display sensors as text when button clicked-->
        
         <button onclick="ajaxCallToServer()">XMLHttpRequest</button>   <!--go to seedvault function when button clicked-->
-      
-        <button onclick="add_seed_clicked()">add seed</button>   <!--go to seedvault function when button clicked-->
+
+        <button onclick="main_clicked()">main</button>   <!--go to seedvault function when button clicked-->
    
 
 <!--"seedvault" URL LINKS on bottom of page-->
-    <p><a href="/">seedvault2</a></p>    <!--opens file my directory-->
-    <p><a href="seedvault.html">seedvault3</a>  <!--opens file show content like a hyperlink-->
-    <p><a href="script.js">seedvault4</a></p>    <!--opens file shows content-->
+    <p><a href="/seedvault">seedvault</a></p>    <!--opens seed database-->
+    <p><a href="/climate">forecast</a></p>    <!--opens file directory-->
+    <p><a href="/sensors">sensors</a></p>    <!--opens file directory-->
 
-    <script src="seedvault.html"></script>
+    <link href="http://127.0.0.1:3000/templates/seedvault.html">
+    <link href="http://127.0.0.1:8000/templates/seedvault.html">
+    <link href="http://127.0.0.1:5500/templates/seedvault.html">
+  
 
+    <p id="response">response</p>
+  
     </body>
     <script defer src="script.js"></script>
 </html>
