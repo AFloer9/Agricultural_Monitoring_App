@@ -9,17 +9,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel  # classes inherit from base model
 from datetime import date  # for default today's date insertion to date fields
 from sqlalchemy.orm import Session
-#from serial import Serial
-#import serial_data #Alex
-import pydanticmodels
-import sqlalchmodels  
-from dbsetup import engine, get_db
-from routers import sensorpathop2
-
+from routers import gardenpathop, userspathop, sensorpathop, sensorpathop2, db_serial_arduino
+from dbsetup import engine
+import sqlalchmodels
 import json
 #import sys
 #sys.path.append("../otherProjects/arduino")
-from db_serial_arduino import show_sensor_data, show_sensors
+from routers.db_serial_arduino import show_sensor_data, show_sensors
 
 
 
@@ -37,12 +33,12 @@ sqlalchmodels.Base.metadata.create_all(bind=engine) #creates all tables accordin
 
 app = FastAPI()  # create instance of FastAPI named 'app'
 
-app.mount('/templates', StaticFiles(directory="templates"), name="templates")
+#app.mount('/templates', StaticFiles(directory="templates"), name="templates")
 
 origins = [
     "http://localhost",
     "http://localhost:5050",
-    "http://localhost:8000"#,
+    "http://localhost:8000",
 ]
 
 app.add_middleware(
@@ -50,13 +46,15 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]#,
+    allow_headers=["*"],
 )
 
-#templates = Jinja2Templates(directory="templates") #create template object for HTML
+templates = Jinja2Templates(directory="templates") #create template object for HTML
 
-
-app.include_router(sensorpathop2.router) #router object--directs API to routes in other .py files
+app.include_router(gardenpathop.router) #router object--directs API to routes in other .py files
+app.include_router(userspathop.router)
+app.include_router(sensorpathop.router)
+app.include_router(sensorpathop2.router) 
 
 @app.websocket("/ws")
 async def websocket_getDbData(websocket: WebSocket):

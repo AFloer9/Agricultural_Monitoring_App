@@ -1,12 +1,11 @@
 # Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
 
 #ORM models--define database table attributes
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Sequence, Date, JSON, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Sequence, Date, JSON
 #from datetime import date  # for default today's date insertion to date fields
 from sqlalchemy.sql.sqltypes import DATE
 from sqlalchemy.sql.expression import text
 from sqlalchemy.orm import relationship
-from datetime import date
 from dbsetup import Base  #Base class which all SQLalchemy models inherit from
 
 # classes returned to user from API by http GET for reading
@@ -59,7 +58,7 @@ class Supply(Base):  # extends class Basemodel--allows auto-validation of user i
     #pred_rainfall = Column(Float)    
     #wind_speed = Column(Float)
     
-###Alex's code>>>>
+###Alex's code>>
 class Sensor(Base):
 	__tablename__ = 'my_sensors'
 	ID = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
@@ -78,7 +77,7 @@ class SensorRelation(Base):
 
 class SensorData(Base):
 	__tablename__ = 'sensor_data'
-	date = Column(DateTime)
+	# date
 	data_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
 	data = Column(Float)
 	sensor_loc = Column(String)
