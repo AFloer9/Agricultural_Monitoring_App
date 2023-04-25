@@ -1,6 +1,6 @@
 # Author: Anna Hyer Spring 2023 Class: Fundamentals of Software Engineering
 
-from fastapi import Body, FastAPI, Depends, HTTPException, status, APIRouter, Response, Request  # import library/framework
+from fastapi import Body, FastAPI, Depends, HTTPException, status, APIRouter, Response, Request, Form  # import library/framework
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -10,21 +10,16 @@ from pydantic import BaseModel  # classes inherit from base model
 from datetime import date  # for default today's date insertion to date fields
 from sqlalchemy.orm import Session
 from sqlalchemy.types import SchemaType, PickleType
-from sqlalchemy import update, JSON
-import pydanticmodels
-import sqlalchmodels  
-from dbsetup import get_db
-from typing import Dict, Optional, List
-from requests import Request
-import requests
-#import serial_data #Alex
+from sqlalchemy import update, JSON  
+from typing import Dict, Optional, List, Annotated
 from jinja2 import Environment, FileSystemLoader, Template
+import sqlalchmodels
+import pydanticmodels
+from dbsetup import get_db
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory="./templates/") #create template object for HTML
-template = templates.get_template("index.html")
-template = templates.get_template("seedvault.html")
 
 #path operations:
 # API server drills down thru request functions until it finds an HTTP request match:
@@ -42,43 +37,44 @@ template = templates.get_template("seedvault.html")
 
 #@router.get("/")   
 #def show_root():  
-    # displayed to user: (gets converted to JSON) (key:value pair)
+    #displayed to user: (gets converted to JSON) (key:value pair)
     #return {"Welcome to the Agricultural Monitoring Project"}
     #shows on webpage at path address
     
  #FOR HTML/JS
-@router.get("/")   
-def show_main(request = Request, db: Session = Depends(get_db)):
-   return templates.TemplateResponse("index.html", {'request': request})
+# @router.get("/")   
+# def show_main(request: Request, db: Session = Depends(get_db)):
+#     return templates.TemplateResponse("index.html", {"request": request})
+
+
+# @router.get("/seedvault")  #get inventory of all seeds collected         db version--HTTP--no front end
+# #@router.get("/seedvault", response_model=List[pydanticmodels.Seed]) 
+# def show_seeds(db: Session = Depends(get_db)):  # dependency
+#     seeds = db.query(sqlalchmodels.Seed).all() 
+#      #print(seeds)  # print to terminal
+#     return seeds   #(gets converted to JSON) (key:value pair)
 
  #FOR HTML/JS
-#@router.get("/seedvault")
-@router.get("/seedvault", response_class=HTMLResponse)  #TEST for jinja template
-#@router.get("/seedvault", response_model=List[pydanticmodels.Seed]) 
+# #@router.get("/seedvault")
+@router.get("/", response_class=HTMLResponse)  #TEST for jinja template
+# #@router.get("/seedvault", response_model=List[pydanticmodels.Seed]) 
 def test_show_main(request: HTTPConnection, db: Session = Depends(get_db)):  # dependency
-    seeds = db.query(sqlalchmodels.Seed).all() 
-    #seeds = ("daisy")
-    print(seeds)
-    print(request)
+    #seeds = db.query(sqlalchmodels.Seed).all() 
+#     #seeds = ("daisy")
+#     print(seeds)
+#     print(request)
     #return seeds
-    return templates.TemplateResponse("index.html", {"request": request, "seeds": seeds})
-    #return (seeds)
+#     return templates.TemplateResponse("index.html", {'request': request, 'seeds':seeds} )
+    return templates.TemplateResponse("index.html", {"request": request})
+#     #return template(seed_type=seeds)
    
-#FOR HTML/JS  
-@router.get("/seedvault", response_class=HTMLResponse)  #TEST for jinja template
-#@router.get("/seedvault", response_model=List[pydanticmodels.Seed]) 
+# #FOR HTML/JS  
+@router.get("/seedvault/", response_class=HTMLResponse)  #TEST for jinja template
+# #@router.get("/seedvault", response_model=List[pydanticmodels.Seed]) 
 def test_show_seeds(request: HTTPConnection, db: Session = Depends(get_db)):  # dependency
     seeds = db.query(sqlalchmodels.Seed).all() 
-    #return templates.TemplateResponse("seedvault.html", {'request': request} )
-    return templates.TemplateResponse('index.html', {"request": request, "seeds": seeds})
-
-
-@router.get("/seedvault")  #get inventory of all seeds collected         db version--HTTP--no front end
-#@router.get("/seedvault", response_model=List[pydanticmodels.Seed]) 
-def show_seeds(db: Session = Depends(get_db)):  # dependency
-    seeds = db.query(sqlalchmodels.Seed).all() 
-     #print(seeds)  # print to terminal
-    return seeds   #(gets converted to JSON) (key:value pair)
+#     #return templates.TemplateResponse("seedvault.html", {'request': request} )
+    return templates.TemplateResponse('index.html', {"request": request})
 
     
 @router.get("/my_plants")  # get inventory of plants owned (all listings)
@@ -130,38 +126,33 @@ def delete_seed(id: int, db: Session = Depends(get_db)):
     print("seed deleted")
     return {"seed deleted"}
 
-@router.post("/seedvault", status_code=status.HTTP_201_CREATED, response_model=pydanticmodels.CreateSeed)    #INSERT/create new seed
-def create_new_seed(seed: pydanticmodels.CreateSeed, db: Session = Depends(get_db)):
-    #new_seed = sqlalchmodels.Seed(id=seed.id, seed_type=seed.seed_type, coll_loc = seed.coll_loc, 
-    #coll_date = seed.coll_date, num_coll = seed.num_coll)          
+@router.post("/seedvault", status_code=status.HTTP_201_CREATED)    #INSERT/create new seed
+def create_new_seed(seed: pydanticmodels.CreateSeed, db: Session = Depends(get_db)):  #<<FOR POSTMAN    
+    #FOR WEBPAGE FORM
+#def create_new_seed(seed_type: Annotated[str, Form()], coll_loc: Annotated[str, Form()], coll_date: Annotated[str, Form()], num_coll: Annotated[str, Form()],   db: Session = Depends(get_db)):
+    #new_seed = sqlalchmodels.Seed(seed_type=seed_type, coll_loc = coll_loc, 
+    #coll_date = coll_date, num_coll = num_coll)   
+    #new_seed = sqlalchmodels.Seed(seed_type=seed_type, coll_loc = coll_loc, 
+    #coll_date = coll_date, num_coll = num_coll)   
     new_seed = sqlalchmodels.Seed(**seed.dict())
-    if new_seed.seed_type == None:
-        return {"Please provide a seed type"}
-    else:    
-        print(new_seed)
-        db.add(new_seed)
-        db.commit()
-        db.refresh(new_seed) #flush
-        return new_seed #return JSON model of newly-created seed to user
-
-@router.put("/seedvault/{id}", response_model=pydanticmodels.EditSeed) 
-def edit_seed2(id: int, db: Session = Depends(get_db)): 
-    edseed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id) # using SQLAlchemy query
-    seed = edseed.first() 
-    if seed == None:
-        print("no seed by that ID")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    #edseed.update({'seed_type': 'snapdragon', 'coll_loc': 'field', 'num_coll': '34'})
-    edseed.update(sqlalchmodels.Seed(seed_type=seed.seed_type, coll_loc = seed.coll_loc, #NO ID
-    coll_date = seed.coll_date, num_coll = seed.num_coll))
+    #if new_seed.seed_type == None:
+        #return {"Please provide a seed type"}
+    #else:    
+    #print(seed_type, coll_loc, coll_date, num_coll)
+    print(new_seed)
+    #db.add(seed_type, coll_loc, coll_date, num_coll) # type: ignore #, coll_date, coll_loc, num_coll)
+    db.add(new_seed)
     db.commit()
-    return seed
+    db.refresh(new_seed) #flush
+    #return JSONResponse(seed_type) #return JSON model of newly-created seed to user
+    #return templates.TemplateResponse("seedvault.html",)
+    return new_seed
 
 
 #@router.put("/seedvault/{seed_type}", response_model=pydanticmodels.EditSeed) 
 #@router.put("/seedvault/{id}", response_model=pydanticmodels.EditSeed) 
-@router.put("/seedvault/{id}")
-def edit_seed(id: int, seed: pydanticmodels.Seed, db: Session = Depends(get_db)):   #inputs to method from HTTP response
+#@router.put("/seedvault/{id}")
+#def edit_seed(id: int, seed: pydanticmodels.Seed, db: Session = Depends(get_db)):   #inputs to method from HTTP response
 #def edit_seed(seed_type: str, seed: pydanticmodels.Seed, db: Session = Depends(get_db)):   #inputs to method from HTTP response
     #edseed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.seed_type == 'seed_type').one_or_none() #find seed by type
     #edseed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id).get(id)  #find seed by ID
@@ -206,20 +197,3 @@ def edit_seed(id: int, seed: pydanticmodels.Seed, db: Session = Depends(get_db))
     #return JSONResponse(content=json_data)
    
    
-    
-#@router.patch("/seedvault/{id}", response_model=pydanticmodels.EditSeed) 
-@router.patch("/seedvault/{id}", response_model=None) 
-def edit_seed_attrib(id: int, updated_seed: pydanticmodels.EditSeed, db: Session = Depends(get_db)): 
-    edseed = db.query(sqlalchmodels.Seed).filter(sqlalchmodels.Seed.id == id).one() # using SQLAlchemy query
-    updated_seed = edseed.first()
-    if updated_seed == None:
-        print("no seed by that ID")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    #edseed.update({'seed_type': 'sweet pea', 'coll_loc': 'field', 'num_coll': '34'})  #hardcode DEBUG
-    edseed.update({'id': id, 'seed_type': 'seed_type', 'coll_loc': 'coll_loc',              #NO ID
-    'coll_date': 'coll_date', 'num_coll': 'num_coll'}, synchronize_session=False)
-
-    #edseed.update(updated_seed.dict(), synchronize_session=False)
-    db.add(edseed)
-    db.commit()
-    return edseed.first()
