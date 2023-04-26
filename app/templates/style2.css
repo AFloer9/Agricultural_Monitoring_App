@@ -1,0 +1,34 @@
+table {
+		border-collapse: collapse;
+	}
+td, th {
+  		padding: 8px;
+  		border-bottom: 1px solid black;
+  		text-align: center;
+	}
+tr:hover {
+		background-color: #dddddd;
+	}
+ul {
+	background-color: #f1f1f1;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+li a:hover{
+	background-color: #dddddd;
+}
+li a {
+	display: inline-block;
+	text-align: center;
+	padding: 14px 50px;
+	text-decoration: none;
+}
+li {
+	float: left;
+}
+
+.data_table {
+	overflow: auto;
+}

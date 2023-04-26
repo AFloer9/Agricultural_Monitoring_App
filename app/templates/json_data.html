@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('templates', path='style2.css') }}">
+<html lang='en-US'>
+
+<head>
+	<title>Climate</title>
+	<link rel="icon" type="image/x-icon" href="{{ url_for('templates', path='plant.png') }}">
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<style type="text/css">
+.column {
+  background-color: #f1f1f1;
+  width: 132px;
+  height: 300px;
+  margin: 5px;
+  text-align: center;
+  line-height: 10px;
+  font-size: 12px;
+  word-wrap: break-word;
+  overflow: auto;
+}
+
+.row {
+  display: flex;
+  flex-flow: row wrap;
+  background-color: #dddddd;
+  width: 70%;
+  align-items: stretch;
+}
+
+</style>
+
+<body>
+	<div>
+		<ul>
+			<li> <a href="/"> <b>Home</b></a></li>
+			<li> <a href="/sensors"><b>Sensors </b></a></li>
+			<li> <a href="/climate"><b>Climate</b></a></li>
+			<li style="float:right;"> <a href="#"><b>About</b></a></li>
+		</ul>
+	</div>
+	<hr>
+	<h1 style="text-align:center;"> Climate Forecast (Vancouver)</h1>
+	<hr>
+
+<div style="margin-left:auto; margin-right:auto;" class="row">
+	
+</div>
+
+</body>
+
+ </html>
+
+<script >
+	const url = "https://api.weather.gov/gridpoints/PQR/122,44/forecast?units=us";
+	function func(week) {
+		let str = "";
+		//console.log(week);
+		for (i in week) {
+			let halfDay = week[i];
+			const name = halfDay["name"];
+			const temp = halfDay["temperature"] + " " + halfDay["temperatureUnit"];
+			const windDirection = halfDay["windDirection"];
+			const windSpeed = halfDay["windSpeed"];
+			const forecast = halfDay["detailedForecast"];
+			const dewpoint = halfDay["dewpoint"]["value"] + " " + halfDay["dewpoint"]["unitCode"];
+			const humidity = halfDay["relativeHumidity"]["value"];
+			const precipitation = halfDay["probabilityOfPrecipitation"];
+			const icon = halfDay["icon"];
+			
+			str += "<div class='column'><p>" + name +
+			"</p><img src='" + icon + 
+			"'><p>Forecast: " + forecast +
+			"</p><p> Dewpoint: " + dewpoint + 
+			"</p><p>Probability of precipitation: " + precipitation + 
+			" % </p><p>Relative humidity: " + humidity + 
+			" % </p><p>Temperature: " + temp + 
+			"</p><p> Wind direction: " + windDirection + 
+			"</p><p> Wind speed: " + windSpeed + "</p></div>";
+			
+		}
+		
+		document.getElementsByClassName("row")[0].innerHTML = str;
+	}
+	
+	async function getText(file) {
+  		let data = await fetch(file);
+  		let text = await data.text();
+ 		func(JSON.parse(text)["properties"]["periods"]);
+	}
+	
+	getText(url);
+</script>

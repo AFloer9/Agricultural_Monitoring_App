@@ -6,7 +6,6 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Sequ
 from sqlalchemy.sql.sqltypes import DATE
 from sqlalchemy.sql.expression import text
 from sqlalchemy.orm import relationship
-from datetime import date
 from dbsetup import Base  #Base class which all SQLalchemy models inherit from
 
 # classes returned to user from API by http GET for reading
@@ -59,7 +58,7 @@ class Supply(Base):  # extends class Basemodel--allows auto-validation of user i
     #pred_rainfall = Column(Float)    
     #wind_speed = Column(Float)
     
-###Alex's code>>>>
+###Alex's code>>
 class Sensor(Base):
 	__tablename__ = 'my_sensors'
 	ID = Column(Integer, primary_key=True, autoincrement=True, nullable=False)

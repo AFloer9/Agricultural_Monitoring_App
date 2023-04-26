@@ -1,0 +1,201 @@
+<!-- Alexander Flores Spring 2023 CS320-->
+<!-- This website was made with the help of w3schools.com-->
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('templates', path='/style2.css') }}">
+<html lang='en-US'>
+
+<head>
+	<title>Arduino Data</title>
+	<link rel="icon" type="image/x-icon" href="{{ url_for('templates', path='/plant.png') }}">
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+	<div>
+		<ul>
+			<li> <a href="/"> <b>Home</b></a></li>
+			<li> <a href="/sensors"><b>Sensors </b></a></li>
+			<li> <a href="/climate"><b>Climate</b></a></li>
+			<li style="float:right"> <a href="#"><b>About</b></a></li>
+		</ul>
+	</div>
+	<hr>
+	<h1 style="text-align:center;"> Arduino Data</h1>
+	<hr>
+	
+	<div align="center">
+		<form id="forms" action="" onsubmit="changeData(event)">
+			<label for="data_display">Choose your data:</label>
+			<select name="data_display">
+				<option value="" selected disabled hidden>Select</option>
+				<option value="data_recent">Most recent Data</option>
+				<option value="sensor">My Sensors</option>
+				<option value="data">Data</option>
+				<!-- <option value="Meta">Sensor Metadata</option> -->
+			</select>
+
+			<input type="date" id="start_date" name="start" min="2000-01-02" required> to
+			<input type="date" id="end_date" name="end" min="2000-01-02">
+		
+			<input type="submit" class="test" name="submit">
+		</form>
+	</div>
+
+	<div class="data_table" style='height:500px; width:350px;margin-left: auto; margin-right: auto; overflow: scroll;'>
+		</div>
+
+<canvas id="myChart" style="width:100%; max-width:600px; margin-left: auto; margin-right: auto; display: none;"></canvas>
+</body>
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js">
+</script>
+
+
+
+<script>
+	var ws = new WebSocket("ws://localhost:8000/ws");
+	ws.onmessage = function(event) {
+		const data = JSON.parse(event.data);
+
+		let form = document.forms.namedItem("forms")[0].value;
+		let display = "block";
+
+		let new_width;
+		if (form == "sensor") {
+			display = "none"
+			 new_width = 200;
+		} else if (form == "data") {
+			makeGraph(data);
+			new_width = 350;
+		} else {
+			display = "none"
+			new_width = 500;
+		}
+		document.getElementsByClassName('data_table')[0].style.width = new_width;
+		var canvas = document.querySelector("canvas");
+		canvas.style.display = display;
+
+		// i need to add units
+		let str = "<table><tr>";
+		for (attribute in data[0]) { /* Insert attribute name of each column */
+			str += "<th>" + attribute + "</th>";
+		}
+		str += "</tr>";
+		
+		for (row in data) { /* Insert each tuple into the table */
+			str +=  "<tr>";
+			for (attribute in data[row]) {
+				str += "<td>" + data[row][attribute] + "</td>";
+			}
+			str +=  "</tr>";
+		}
+		str += "</table>";
+
+		document.getElementsByClassName("data_table")[0].innerHTML = str;
+				
+	}
+
+
+function changeData(event) {
+	let x = document.forms.namedItem("forms");
+	let y = "";
+	for (let i = 0; i < 3; i++) {
+	 	y += x[i].value + " ";
+	}
+
+	ws.send(y);
+	event.preventDefault();
+	return false;
+}
+
+
+function makeGraph(data) {
+	const sensor_names = [];
+	const sensor_data = {};
+
+	for (row in data) {
+		let sensor  = data[row]['Sensor Name'];
+		let d		= data[row]['Data'];
+
+		if (!sensor_names.includes(sensor)) {
+			sensor_names.push(sensor);
+			sensor_data[sensor] = [d];
+		} else {
+			sensor_data[sensor].push(d);
+		}
+	}
+	
+	let length = 0;
+	let datasets = [];
+	const colors = ["red","green","blue","yellow","black","grey","orange", "violet"];
+	let color_index = 0;
+
+	for (row in sensor_data) {
+		const d = sensor_data[row];
+		if (length < d.length) {
+			length = d.length;
+		}
+
+		datasets.push(
+			{ 
+    	label: row,
+      data: sensor_data[row],
+      borderColor: colors[color_index],
+      fill: false
+    });
+
+
+		if (color_index >= colors.length) {
+			color_index = 0;
+		} else {
+			color_index++;
+		}
+
+	}
+
+
+	if (length == 0) {
+		return;
+	}
+
+	const labels = [];
+	const evenSeconds = 1;
+	const oddSeconds = 2;
+	let total = 0;
+
+	for (let i = 0; i < length; i++) {
+		if (i % 2 == 0) {
+			labels.push("Second " + total);
+			total += evenSeconds;
+		} else {
+			labels.push("Second " + total);
+			total += oddSeconds;
+		}
+
+	}
+
+	console.log(sensor_data);
+
+	new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: labels,
+    datasets: datasets
+  },
+  options: {
+    legend: {display: true},
+    text: "Arduino Data",
+    display:true
+  }
+});
+
+}
+
+</script>
+
+
+
+
